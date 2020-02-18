@@ -283,15 +283,48 @@ namespace TestProject
             MyTreeNode myTreeRoot = new MyTreeNode(nroot.Nodes[0]);
             PopulateTree(myTreeRoot, treeView_proj);
         }
+        private TreeNode SearchNode(string SearchText, TreeNode StartNode)
+        {
+            TreeNode node = null;
+            while (StartNode != null)
+            {
+                if (StartNode.Text.ToLower().Contains(SearchText.ToLower()))
+                {
+                    node = StartNode;
+                    break;
+                };
+                if (StartNode.Nodes.Count != 0)
+                {
+                    node = SearchNode(SearchText, StartNode.Nodes[0]);//Recursive Search
+                    if (node != null)
+                    {
+                        break;
+                    };
+                };
+                StartNode = StartNode.NextNode;
+            };
+            return node;
+        }
 
         private void txtFilter_TextChanged(object sender, EventArgs e)
         {
-            string search = txtFilter.Text;
-            if(search.Count() <= 3) return;
-            MyTreeNode n = (MyTreeNode)treeView_lib.Nodes[0];
-            n.searchTree(search);
-            treeView_lib.SelectedNode = n;
+            
+        }
 
+        private void txtFilter_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if(e.KeyChar == (char)13)
+            {
+                string search = txtFilter.Text;
+                if (search.Count() < 3) return;
+                TreeNode SelectedNode = SearchNode(search, treeView_lib.Nodes[0]);
+                if (SelectedNode != null)
+                {
+                    treeView_lib.SelectedNode = SelectedNode;
+                    treeView_lib.SelectedNode.Expand();
+                    this.treeView_lib.Select();
+                }
+            }
         }
     }
 
@@ -318,11 +351,7 @@ namespace TestProject
             }
         }
 
-        public void searchTree(string s)
-        {
-            
-            
-        }
+        
     }
 
     public class Node
