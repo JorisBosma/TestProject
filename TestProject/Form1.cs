@@ -39,8 +39,8 @@ namespace TestProject
         private void Form1_Load(object sender, EventArgs e)
         //----------------MAIN------------------------------------------------
         {
-            CreateFromXML("lib.xml", treeView_lib);
             CreateFromXML("proj.xml", treeView_proj);
+            CreateFromXML("lib.xml", treeView_lib);
         }
         public void PopulateTree(MyTreeNode MyTreeRoot, TreeView treeView)
         {
@@ -97,7 +97,6 @@ namespace TestProject
         public void treeView_ItemDrag(object sender, ItemDragEventArgs e)
         {
             // Move the dragged node when the left mouse button is used.
-
             if (e.Button == MouseButtons.Left)
             {
                 DoDragDrop(e.Item, DragDropEffects.Move);
@@ -206,9 +205,6 @@ namespace TestProject
             pNode.nNode.InsertNode(i, cNode.nNode);
             treeView.SelectedNode = cNode;
         }
-
-       
-
         
         private TreeNode SearchNode(string SearchText, TreeNode StartNode)
         {
@@ -285,7 +281,6 @@ namespace TestProject
         private void saveLibraryToolStripMenuItem_Click(object sender, EventArgs e)
         {
             MyTreeNode root = (MyTreeNode)treeView_proj.Nodes[0];
-
             //start writing all nodes to overarching element
             string rs = "<?xml version='1.0' encoding='UTF-8'?>\n <!--project>" + txtProjNr.Text + "</project>\n <LastEdit>" + Environment.UserName + "</LastEdit-->\n";
             rs = rs + root.nNode.GenerateXML();
@@ -332,7 +327,7 @@ namespace TestProject
         }
     }
 
-    //---------------------------CLASS DEFINITIONS------------------------------------
+    //---------------------------CLASSES----------------------------------------------------------------------------------------------------------------------
     public class MyTreeNode : TreeNode
     {
         public Node nNode;
@@ -342,9 +337,20 @@ namespace TestProject
             this.nNode = n;
         }
 
-
         public void getTreeNodes()
         {
+            if (this.nNode.GetClass() == "Device")
+            {
+                Device d = (Device)this.nNode;
+                foreach (Signal s in d.Signals)
+                {
+                    MyTreeNode a = new MyTreeNode(s);
+                    a.Text = a.nNode.sNode;
+                    this.Nodes.Add(a);
+                }
+
+                
+            }
             foreach (Node n in this.nNode.Nodes)
             {
                 MyTreeNode a = new MyTreeNode(n);
@@ -353,8 +359,8 @@ namespace TestProject
                 a.Text = a.nNode.sNode;
                 this.Nodes.Add(a);
             }
+            
         }
-        
     }
 
     public class Node
@@ -381,6 +387,10 @@ namespace TestProject
             if (i < 0) return;
             if (i > Nodes.Count()) return;
             Nodes.Insert(i, n);
+        }
+        public virtual string GetClass()
+        {
+            return "Node";
         }
 
         public virtual string GenerateXML()
@@ -430,9 +440,25 @@ namespace TestProject
                     this.parseXML(t);
                 }
             }
+            else if (e.Name == "Signal")
+            {
+                string s = e.GetAttribute("name");
+                XmlElement t;
+                Signal newNode = new Signal(s);
+                this.Nodes.Add(newNode);
+                if (e.HasChildNodes == true)
+                {
+                    t = (XmlElement)e.ChildNodes[0];
+                    newNode.parseXML(t);
+                }
+                t = (XmlElement)e.NextSibling;
+                if (t != null)
+                {
+                    this.parseXML(t);
+                }
+            }
         }
     }
-
 
     public class Device : Node
     {
@@ -446,38 +472,57 @@ namespace TestProject
         {
             Signals.Add(s);
         }
-        public void GetSignals(List<Signal> Signals)
+        public Signal GetSignals()
         {
-            int i = 0;
-            Signals.ForEach(delegate (Signal ss)
-            {
-                i++;
-            });
+
+            return null;
         }
         public override string GenerateXML()
         {
             String result;
             result = "<Device name='" + this.sNode + "'>\n";
             foreach (Node n in this.Nodes)
-            {
+            { 
                 result = result + n.GenerateXML();
+            }
+            foreach (Signal s in this.Signals)
+            {
+                result = result + s.GenerateXML();
             }
             result = result + "</Device>\n";
             return result;
         }
-    }
-    public class Signal
-    {
-        public List<SignalType> signalTypes;
-        public string sSignal;
-        public Signal(string label)
+        public override string GetClass()
         {
-            this.sSignal = label;
+            return "Device";
+        }
+    }
+    public class Signal : Node
+    {
+        public SignalType signalType;
+        public Signal(string sNode) : base(sNode)
+        {
+            this.signalType = new SignalType("");
+        }
+
+        public override string GenerateXML()
+        {
+            String result;
+            result = "<Signal name='" + this.sNode + "'>\n</Signal>\n";
+            return result;
+        }
+        public override string GetClass()
+        {
+            return "Signal";
         }
     }
 
     public class SignalType 
     {
-        
+        public string Type;
+        public SignalType(string sType)
+        {
+            this.Type = sType;
+        }
     }
 }

@@ -25,9 +25,18 @@ namespace TestProject
         private void btnAdd_Click(object sender, EventArgs e)
         {
             string Name = txtName.Text;
-            
-            if (Name == null) return;
             Node newNode = new Node(Name);
+            if (Name == null) return;
+            if(radioButton1.Checked == true)
+            {
+                newNode = new Device(Name);
+            }
+            else if(radioButton2.Checked == true)
+            {
+                newNode = new Signal(Name);
+            }
+            
+            
             MyTreeNode newTreeNode = new MyTreeNode(newNode);
             newTreeNode.Text = newNode.sNode;
             pNode.nNode.AddNode(newNode);
