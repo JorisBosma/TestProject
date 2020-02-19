@@ -39,63 +39,8 @@ namespace TestProject
         private void Form1_Load(object sender, EventArgs e)
         //----------------MAIN------------------------------------------------
         {
-
-            Node root = new Node("RootNode");
-            Node node1 = new Node("node1");
-            Node node1a = new Node("node1a");
-            Node node1b = new Node("node1b");
-            Node node1c = new Node("node1c");
-            Node node2 = new Node("node2");
-            Node node2a = new Node("node2a");
-            Device Dev1 = new Device("Dev1");
-            Signal Sig1 = new Signal("Sig1");
-            Signal Sig2 = new Signal("Sig2");
-
-            Node lroot = new Node("LRoot node");
-            Node lnode1 = new Node("Lnode1");
-            Node lnode1a = new Node("Lnode1a");
-            Node lnode1b = new Node("Lnode1b");
-            Node lnode1c = new Node("Lnode1c");
-            Node lnode2 = new Node("Lnode2");
-            Node lnode2a = new Node("Lnode2a");
-            Device lDev1 = new Device("LDev1");
-            Signal lSig1 = new Signal("LSig1");
-            Signal lSig2 = new Signal("LSig2");
-
-            //  Node root;
-            //  root = NodeFactory.readXML();
-
-            //Make a tree root node, and give it the original root node-------------
-            MyTreeNode MyTreeRoot = new MyTreeNode(root);
-            //There is always one original root (right?)
-            MyTreeNode MyTreeRoot2 = new MyTreeNode(lroot); // This root is used for the library
-
-            root.AddNode(node1);
-            root.AddNode(node2);
-            root.AddNode(Dev1);
-
-            node1.AddNode(node1a);
-            node1.AddNode(node1b);
-            node1.AddNode(node1c);
-            node2.AddNode(node2a);
-            Dev1.AddSignal(Sig1);
-            Dev1.AddSignal(Sig2);
-
-            lroot.AddNode(lnode1);
-            lroot.AddNode(lnode2);
-            lroot.AddNode(lDev1);
-
-            lnode1.AddNode(lnode1a);
-            lnode1.AddNode(lnode1b);
-            lnode1.AddNode(lnode1c);
-            lnode2.AddNode(lnode2a);
-            lDev1.AddSignal(lSig1);
-            lDev1.AddSignal(lSig2);
-
-            Dev1.GetSignals(Dev1.Signals);
-            PopulateTree(MyTreeRoot, treeView_proj);
-            PopulateTree(MyTreeRoot2, treeView_lib);
-
+            CreateFromXML("lib.xml", treeView_lib);
+            CreateFromXML("proj.xml", treeView_proj);
         }
         public void PopulateTree(MyTreeNode MyTreeRoot, TreeView treeView)
         {
@@ -262,27 +207,9 @@ namespace TestProject
             treeView.SelectedNode = cNode;
         }
 
-        private void btnDoXML_Click(object sender, EventArgs e)
-        {
-            MyTreeNode root = (MyTreeNode)treeView_proj.Nodes[0];
+       
 
-            //start writing all nodes to overarching element
-            string rs = root.nNode.GenerateXML();
-            Console.WriteLine(rs);
-            System.IO.File.WriteAllText("Test.xml", rs);
-        }
-
-        private void btnGetXML_Click(object sender, EventArgs e)
-        {
-            string rs = System.IO.File.ReadAllText("Test.xml");
-            XmlDocument doc = new XmlDocument();
-            doc.LoadXml(rs);
-            XmlElement root = doc.DocumentElement;
-            Node nroot = new Node("GETTREETHING");
-            nroot.parseXML(root);
-            MyTreeNode myTreeRoot = new MyTreeNode(nroot.Nodes[0]);
-            PopulateTree(myTreeRoot, treeView_proj);
-        }
+        
         private TreeNode SearchNode(string SearchText, TreeNode StartNode)
         {
             TreeNode node = null;
@@ -296,20 +223,12 @@ namespace TestProject
                 if (StartNode.Nodes.Count != 0)
                 {
                     node = SearchNode(SearchText, StartNode.Nodes[0]);//Recursive Search
-                    if (node != null)
-                    {
-                        break;
-                    };
-                };
+                    if (node != null) break;
+                }
                 StartNode = StartNode.NextNode;
-            };
+            }
             return node;
-        }
-
-        private void txtFilter_TextChanged(object sender, EventArgs e)
-        {
-            
-        }
+        } 
 
         private void txtFilter_KeyPress(object sender, KeyPressEventArgs e)
         {
@@ -320,11 +239,96 @@ namespace TestProject
                 TreeNode SelectedNode = SearchNode(search, treeView_lib.Nodes[0]);
                 if (SelectedNode != null)
                 {
-                    treeView_lib.SelectedNode = SelectedNode;
-                    treeView_lib.SelectedNode.Expand();
+                    treeView_lib.SelectedNode = SelectedNode;                    
                     this.treeView_lib.Select();
                 }
             }
+        }
+
+        private void saveProjectToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MyTreeNode root = (MyTreeNode)treeView_proj.Nodes[0];
+
+            //start writing all nodes to overarching element
+            string rs = "<?xml version='1.0' encoding='UTF-8'?>\n <!--project>" + txtProjNr.Text + "</project>\n <LastEdit>" + Environment.UserName + "</LastEdit-->\n";
+            rs = rs + root.nNode.GenerateXML();
+            //Console.WriteLine(rs);
+            System.IO.File.WriteAllText("Proj.xml", rs);
+        }
+
+        private void openProjectToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            string File = "Test.xml";
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                InitialDirectory = @"C:\Users\Joris.Bosma.KG\source\repos\TestProject\TestProject\bin\Debug",
+                Title = "Browse XML Files",
+
+                CheckFileExists = true,
+                CheckPathExists = true,
+
+                DefaultExt = "xml",
+                Filter = "xml files (*.xml)|*.xml",
+                FilterIndex = 2,
+                RestoreDirectory = true,
+
+                ReadOnlyChecked = true,
+                ShowReadOnly = true
+            };
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                File = openFileDialog.FileName;
+            }
+            CreateFromXML(File, treeView_proj);
+        }
+
+        private void saveLibraryToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MyTreeNode root = (MyTreeNode)treeView_proj.Nodes[0];
+
+            //start writing all nodes to overarching element
+            string rs = "<?xml version='1.0' encoding='UTF-8'?>\n <!--project>" + txtProjNr.Text + "</project>\n <LastEdit>" + Environment.UserName + "</LastEdit-->\n";
+            rs = rs + root.nNode.GenerateXML();
+            //Console.WriteLine(rs);
+            System.IO.File.WriteAllText("lib.xml", rs);
+        }
+
+        private void openLibraryToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string File = "Test.xml";
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                InitialDirectory = @"C:\Users\Joris.Bosma.KG\source\repos\TestProject\TestProject\bin\Debug",
+                Title = "Browse XML Files",
+
+                CheckFileExists = true,
+                CheckPathExists = true,
+
+                DefaultExt = "xml",
+                Filter = "xml files (*.xml)|*.xml",
+                FilterIndex = 2,
+                RestoreDirectory = true,
+
+                ReadOnlyChecked = true,
+                ShowReadOnly = true
+            };
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                File = openFileDialog.FileName;
+            }
+            CreateFromXML(File, treeView_lib);
+        }
+
+        private void CreateFromXML(string File, TreeView treeView)
+        {
+            string rs = System.IO.File.ReadAllText(File);
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml(rs);
+            XmlElement root = doc.DocumentElement;
+            Node nroot = new Node("TempTreeRoot");
+            nroot.parseXML(root);
+            MyTreeNode myTreeRoot = new MyTreeNode(nroot.Nodes[0]);
+            PopulateTree(myTreeRoot, treeView);
         }
     }
 
@@ -350,7 +354,6 @@ namespace TestProject
                 this.Nodes.Add(a);
             }
         }
-
         
     }
 
@@ -391,21 +394,41 @@ namespace TestProject
             result = result + "</Node>\n";
             return result;
         }
-        public void parseXML(XmlElement e)
+        public virtual void parseXML(XmlElement e)
         {
-            string s = e.GetAttribute("name");
-            XmlElement t;
-            Node newNode = new Node(s);
-            this.Nodes.Add(newNode);
-            if (e.HasChildNodes == true)
+            if (e.Name == "Node")
             {
-                t = (XmlElement)e.ChildNodes[0];
-                newNode.parseXML(t);
+                string s = e.GetAttribute("name");
+                XmlElement t;
+                Node newNode = new Node(s);
+                this.Nodes.Add(newNode);
+                if (e.HasChildNodes == true)
+                {
+                    t = (XmlElement)e.ChildNodes[0];
+                    newNode.parseXML(t);
+                }
+                t = (XmlElement)e.NextSibling;
+                if (t != null)
+                {
+                    this.parseXML(t);
+                }
             }
-            t = (XmlElement)e.NextSibling;
-            if(t != null)
+            else if (e.Name == "Device")
             {
-                this.parseXML(t);
+                string s = e.GetAttribute("name");
+                XmlElement t;
+                Device newNode = new Device(s);
+                this.Nodes.Add(newNode);
+                if (e.HasChildNodes == true)
+                {
+                    t = (XmlElement)e.ChildNodes[0];
+                    newNode.parseXML(t);
+                }
+                t = (XmlElement)e.NextSibling;
+                if (t != null)
+                {
+                    this.parseXML(t);
+                }
             }
         }
     }
@@ -442,7 +465,6 @@ namespace TestProject
             result = result + "</Device>\n";
             return result;
         }
-        
     }
     public class Signal
     {
@@ -451,10 +473,6 @@ namespace TestProject
         public Signal(string label)
         {
             this.sSignal = label;
-        }
-        public void parseXML()
-        {
-
         }
     }
 
