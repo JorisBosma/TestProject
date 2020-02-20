@@ -33,6 +33,7 @@
             this.rightClickMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.btnToevoegen = new System.Windows.Forms.ToolStripMenuItem();
             this.btnVerwijderen = new System.Windows.Forms.ToolStripMenuItem();
+            this.propertiesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.treeView_lib = new System.Windows.Forms.TreeView();
             this.txtFilter = new System.Windows.Forms.TextBox();
             this.txtProjNr = new System.Windows.Forms.TextBox();
@@ -45,6 +46,7 @@
             this.openLibraryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
+            this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
             this.rightClickMenu.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -61,9 +63,10 @@
             // 
             this.rightClickMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.btnToevoegen,
-            this.btnVerwijderen});
+            this.btnVerwijderen,
+            this.propertiesToolStripMenuItem});
             this.rightClickMenu.Name = "rightClickMenu";
-            this.rightClickMenu.Size = new System.Drawing.Size(136, 48);
+            this.rightClickMenu.Size = new System.Drawing.Size(136, 70);
             // 
             // btnToevoegen
             // 
@@ -78,6 +81,13 @@
             this.btnVerwijderen.Size = new System.Drawing.Size(135, 22);
             this.btnVerwijderen.Text = "Verwijderen";
             this.btnVerwijderen.Click += new System.EventHandler(this.btnVerwijderen_Click);
+            // 
+            // propertiesToolStripMenuItem
+            // 
+            this.propertiesToolStripMenuItem.Name = "propertiesToolStripMenuItem";
+            this.propertiesToolStripMenuItem.Size = new System.Drawing.Size(135, 22);
+            this.propertiesToolStripMenuItem.Text = "Properties";
+            this.propertiesToolStripMenuItem.Click += new System.EventHandler(this.propertiesToolStripMenuItem_Click);
             // 
             // treeView_lib
             // 
@@ -165,11 +175,20 @@
             // 
             this.openFileDialog.FileName = "openFileDialog1";
             // 
+            // checkedListBox1
+            // 
+            this.checkedListBox1.FormattingEnabled = true;
+            this.checkedListBox1.Location = new System.Drawing.Point(707, 92);
+            this.checkedListBox1.Name = "checkedListBox1";
+            this.checkedListBox1.Size = new System.Drawing.Size(194, 394);
+            this.checkedListBox1.TabIndex = 11;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(960, 578);
+            this.Controls.Add(this.checkedListBox1);
             this.Controls.Add(this.menuStrip1);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.txtProjNr);
@@ -189,14 +208,10 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.TreeView treeView_proj;
         private System.Windows.Forms.ContextMenuStrip rightClickMenu;
         private System.Windows.Forms.ToolStripMenuItem btnToevoegen;
         private System.Windows.Forms.ToolStripMenuItem btnVerwijderen;
-        private System.Windows.Forms.TreeView treeView_lib;
         private System.Windows.Forms.TextBox txtFilter;
-        private System.Windows.Forms.TextBox txtProjNr;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem openProjectToolStripMenuItem;
@@ -206,6 +221,11 @@
         private System.Windows.Forms.ToolStripMenuItem openLibraryToolStripMenuItem;
         private System.Windows.Forms.OpenFileDialog openFileDialog;
         private System.Windows.Forms.SaveFileDialog saveFileDialog;
+        private System.Windows.Forms.ToolStripMenuItem propertiesToolStripMenuItem;
+        public System.Windows.Forms.TreeView treeView_proj;
+        public System.Windows.Forms.TreeView treeView_lib;
+        public System.Windows.Forms.TextBox txtProjNr;
+        private System.Windows.Forms.CheckedListBox checkedListBox1;
     }
 }
 

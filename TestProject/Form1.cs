@@ -31,13 +31,9 @@ namespace TestProject
             treeView_lib.DragDrop += new DragEventHandler(treeView_DragDrop);
             treeView_lib.NodeMouseClick += new TreeNodeMouseClickEventHandler(treeView_MouseDown);
             treeView_lib.KeyDown += new KeyEventHandler(treeview_Shift);
-
-
-
         }
-
+        //----------------MAIN-----------------------------------------------------------------------------------------------------------------------------------------------
         private void Form1_Load(object sender, EventArgs e)
-        //----------------MAIN------------------------------------------------
         {
             CreateFromXML("proj.xml", treeView_proj);
             CreateFromXML("lib.xml", treeView_lib);
@@ -242,7 +238,7 @@ namespace TestProject
         }
 
         private void saveProjectToolStripMenuItem_Click(object sender, EventArgs e)
-        {
+        { 
             MyTreeNode root = (MyTreeNode)treeView_proj.Nodes[0];
 
             //start writing all nodes to overarching element
@@ -295,10 +291,9 @@ namespace TestProject
             }
             CreateFromXML(File, treeView_proj);
         }
-
         private void saveLibraryToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MyTreeNode root = (MyTreeNode)treeView_proj.Nodes[0];
+            MyTreeNode root = (MyTreeNode)treeView_lib.Nodes[0];
             //start writing all nodes to overarching element
             string rs = "<?xml version='1.0' encoding='UTF-8'?>\n<XML>\n<LastEdit Editor='" + Environment.UserName + "'></LastEdit>\n";
             rs = rs + root.nNode.GenerateXML() + "</XML>";
@@ -350,7 +345,7 @@ namespace TestProject
             CreateFromXML(File, treeView_lib);
         }
 
-        private void CreateFromXML(string File, TreeView treeView)
+        public void CreateFromXML(string File, TreeView treeView)
         {
             string rs = System.IO.File.ReadAllText(File);
             XmlDocument doc = new XmlDocument();
@@ -360,6 +355,21 @@ namespace TestProject
             nroot.parseXML(root);
             MyTreeNode myTreeRoot = new MyTreeNode(nroot.Nodes[0]);
             PopulateTree(myTreeRoot, treeView);
+        }
+
+        private void propertiesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //set sender as toolstrip item to make properties accessable
+            ToolStripItem button = sender as ToolStripItem;
+            //then ask for the parent and put it in pbutton
+            ContextMenuStrip pbutton = (ContextMenuStrip)button.GetCurrentParent();
+            //then put the parent's tag into treeview
+            TreeView treeView = (TreeView)pbutton.Tag;
+            MyTreeNode selectedNode = (MyTreeNode)treeView.SelectedNode;
+
+            //Open new form and give the (new) parent node 
+            Form propForm = new PropertyForm(selectedNode, this);
+            propForm.Show();
         }
     }
 
@@ -397,8 +407,8 @@ namespace TestProject
 
     public class Node
     {
-        public List<Node> Nodes;
-        public string sNode;
+        public List<Node> Nodes { get; set; }
+        public string sNode { get; set; }
 
         public Node(string label)
         {
@@ -424,7 +434,6 @@ namespace TestProject
         {
             return "Node";
         }
-
         public virtual string GenerateXML()
         {
             String result;
@@ -473,8 +482,9 @@ namespace TestProject
             }
             else if (e.Name == "Signal")
             {
+                string sType = "Type1";
                 string s = e.GetAttribute("name");
-                Signal newNode = new Signal(s);
+                Signal newNode = new Signal(s, sType);
                 this.Nodes.Add(newNode);
                 if (e.HasChildNodes == true)
                 {
@@ -500,13 +510,12 @@ namespace TestProject
                     this.parseXML(t);
                 }
             }
-
         }
     }
 
     public class Device : Node
     {
-        public List<Signal> Signals;
+        public List<Signal> Signals { get; set; }
         public Device(string sNode) : base(sNode)
         {
             this.Signals = new List<Signal>();
@@ -540,19 +549,39 @@ namespace TestProject
         {
             return "Device";
         }
+        public override void parseXML(XmlElement e)
+        {
+            XmlElement t = null;
+            if (e.Name == "Signal")
+            {
+                string sType = "Type1";
+                string s = e.GetAttribute("name");
+                Signal newNode = new Signal(s, sType);
+                this.Signals.Add(newNode);
+                if (e.HasChildNodes == true)
+                {
+                    t = (XmlElement)e.ChildNodes[0];
+                    newNode.parseXML(t);
+                }
+                t = (XmlElement)e.NextSibling;
+                if (t != null)
+                {
+                    this.parseXML(t);
+                }
+            }
+        }
     }
     public class Signal : Node
     {
-        public SignalType signalType;
-        public Signal(string sNode) : base(sNode)
+        public string signalType { get; set; }
+        public Signal(string sNode, string sType) : base(sNode)
         {
-            this.signalType = new SignalType("");
+            this.signalType = sType;
         }
-
         public override string GenerateXML()
         {
             String result;
-            result = "<Signal name='" + this.sNode + "'>\n</Signal>\n";
+            result = "<Signal name='" + this.sNode + "' Type='"+this.signalType+"'>\n</Signal>\n";
             return result;
         }
         public override string GetClass()
@@ -560,10 +589,9 @@ namespace TestProject
             return "Signal";
         }
     }
-
     public class SignalType
     {
-        public string Type;
+        public string Type { get; set; }
         public SignalType(string sType)
         {
             this.Type = sType;
