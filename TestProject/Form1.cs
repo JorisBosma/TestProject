@@ -188,7 +188,7 @@ namespace TestProject
             TreeView treeView = sender as TreeView;
 
             MyTreeNode selectedNode = (MyTreeNode)treeView.SelectedNode;
-            MyTreeNode cNode = selectedNode; 
+            MyTreeNode cNode = selectedNode;
             MyTreeNode pNode = (MyTreeNode)selectedNode.Parent;
             int i = selectedNode.Index;
 
@@ -205,37 +205,37 @@ namespace TestProject
             pNode.nNode.InsertNode(i, cNode.nNode);
             treeView.SelectedNode = cNode;
         }
-        
-        private TreeNode SearchNode(string SearchText, TreeNode StartNode)
+
+        private MyTreeNode SearchNode(string SearchText, MyTreeNode StartNode)
         {
-            TreeNode node = null;
+            MyTreeNode node = null;
             while (StartNode != null)
             {
-                if (StartNode.Text.ToLower().Contains(SearchText.ToLower()))
+                if (StartNode.nNode.sNode.ToLower().Contains(SearchText.ToLower()))
                 {
                     node = StartNode;
                     break;
                 };
                 if (StartNode.Nodes.Count != 0)
                 {
-                    node = SearchNode(SearchText, StartNode.Nodes[0]);//Recursive Search
+                    node = SearchNode(SearchText, (MyTreeNode)StartNode.Nodes[0]);//Recursive Search
                     if (node != null) break;
                 }
-                StartNode = StartNode.NextNode;
+                StartNode = (MyTreeNode)StartNode.NextNode;
             }
             return node;
-        } 
+        }
 
         private void txtFilter_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if(e.KeyChar == (char)13)
+            if (e.KeyChar == (char)13)
             {
                 string search = txtFilter.Text;
                 if (search.Count() < 3) return;
-                TreeNode SelectedNode = SearchNode(search, treeView_lib.Nodes[0]);
+                MyTreeNode SelectedNode = SearchNode(search, (MyTreeNode)treeView_lib.Nodes[0]);
                 if (SelectedNode != null)
                 {
-                    treeView_lib.SelectedNode = SelectedNode;                    
+                    treeView_lib.SelectedNode = SelectedNode;
                     this.treeView_lib.Select();
                 }
             }
@@ -246,10 +246,28 @@ namespace TestProject
             MyTreeNode root = (MyTreeNode)treeView_proj.Nodes[0];
 
             //start writing all nodes to overarching element
-            string rs = "<?xml version='1.0' encoding='UTF-8'?>\n <!--project>" + txtProjNr.Text + "</project>\n <LastEdit>" + Environment.UserName + "</LastEdit-->\n";
-            rs = rs + root.nNode.GenerateXML();
+            string rs = "<?xml version='1.0' encoding='UTF-8'?>\n<XML>\n<project projectnr='" + txtProjNr.Text + "'></project>\n<LastEdit Editor='" + Environment.UserName + "'></LastEdit>\n";
+            rs = rs + root.nNode.GenerateXML() + "</XML>";
             //Console.WriteLine(rs);
-            System.IO.File.WriteAllText("Proj.xml", rs);
+            string File = "Test.xml";
+            SaveFileDialog saveFileDialog = new SaveFileDialog
+            {
+                InitialDirectory = @"C:\Users\Joris.Bosma.KG\source\repos\TestProject\TestProject\bin\Debug",
+                Title = "Browse XML Files",
+
+                CheckFileExists = true,
+                CheckPathExists = true,
+
+                DefaultExt = "xml",
+                Filter = "xml files (*.xml)|*.xml",
+                FilterIndex = 2,
+                RestoreDirectory = true,
+            };
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                File = saveFileDialog.FileName;
+            }
+            System.IO.File.WriteAllText(File, rs);
         }
 
         private void openProjectToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -282,10 +300,28 @@ namespace TestProject
         {
             MyTreeNode root = (MyTreeNode)treeView_proj.Nodes[0];
             //start writing all nodes to overarching element
-            string rs = "<?xml version='1.0' encoding='UTF-8'?>\n <!--project>" + txtProjNr.Text + "</project>\n <LastEdit>" + Environment.UserName + "</LastEdit-->\n";
-            rs = rs + root.nNode.GenerateXML();
+            string rs = "<?xml version='1.0' encoding='UTF-8'?>\n<XML>\n<LastEdit Editor='" + Environment.UserName + "'></LastEdit>\n";
+            rs = rs + root.nNode.GenerateXML() + "</XML>";
             //Console.WriteLine(rs);
-            System.IO.File.WriteAllText("lib.xml", rs);
+            string File = "Test.xml";
+            SaveFileDialog saveFileDialog = new SaveFileDialog
+            {
+                InitialDirectory = @"C:\Users\Joris.Bosma.KG\source\repos\TestProject\TestProject\bin\Debug",
+                Title = "Browse XML Files",
+
+                CheckFileExists = true,
+                CheckPathExists = true,
+
+                DefaultExt = "xml",
+                Filter = "xml files (*.xml)|*.xml",
+                FilterIndex = 2,
+                RestoreDirectory = true,
+            };
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                File = saveFileDialog.FileName;
+            }
+            System.IO.File.WriteAllText(File, rs);
         }
 
         private void openLibraryToolStripMenuItem_Click(object sender, EventArgs e)
@@ -348,18 +384,14 @@ namespace TestProject
                     a.Text = a.nNode.sNode;
                     this.Nodes.Add(a);
                 }
-
-                
             }
             foreach (Node n in this.nNode.Nodes)
             {
                 MyTreeNode a = new MyTreeNode(n);
-                //a.nNode = n;
                 a.getTreeNodes();
                 a.Text = a.nNode.sNode;
                 this.Nodes.Add(a);
             }
-            
         }
     }
 
@@ -406,10 +438,10 @@ namespace TestProject
         }
         public virtual void parseXML(XmlElement e)
         {
+            XmlElement t = null;
             if (e.Name == "Node")
             {
                 string s = e.GetAttribute("name");
-                XmlElement t;
                 Node newNode = new Node(s);
                 this.Nodes.Add(newNode);
                 if (e.HasChildNodes == true)
@@ -426,7 +458,6 @@ namespace TestProject
             else if (e.Name == "Device")
             {
                 string s = e.GetAttribute("name");
-                XmlElement t;
                 Device newNode = new Device(s);
                 this.Nodes.Add(newNode);
                 if (e.HasChildNodes == true)
@@ -443,7 +474,6 @@ namespace TestProject
             else if (e.Name == "Signal")
             {
                 string s = e.GetAttribute("name");
-                XmlElement t;
                 Signal newNode = new Signal(s);
                 this.Nodes.Add(newNode);
                 if (e.HasChildNodes == true)
@@ -457,6 +487,20 @@ namespace TestProject
                     this.parseXML(t);
                 }
             }
+            else if (t == null)
+            {
+                t = (XmlElement)e.NextSibling;
+                if (t != null)
+                {
+                    this.parseXML(t);
+                }
+                else if (e.HasChildNodes)
+                {
+                    t = (XmlElement)e.ChildNodes[0];
+                    this.parseXML(t);
+                }
+            }
+
         }
     }
 
@@ -482,7 +526,7 @@ namespace TestProject
             String result;
             result = "<Device name='" + this.sNode + "'>\n";
             foreach (Node n in this.Nodes)
-            { 
+            {
                 result = result + n.GenerateXML();
             }
             foreach (Signal s in this.Signals)
@@ -517,7 +561,7 @@ namespace TestProject
         }
     }
 
-    public class SignalType 
+    public class SignalType
     {
         public string Type;
         public SignalType(string sType)

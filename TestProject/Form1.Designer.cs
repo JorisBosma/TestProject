@@ -44,6 +44,7 @@
             this.saveLibraryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openLibraryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
+            this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.rightClickMenu.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -135,28 +136,28 @@
             // saveProjectToolStripMenuItem
             // 
             this.saveProjectToolStripMenuItem.Name = "saveProjectToolStripMenuItem";
-            this.saveProjectToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.saveProjectToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
             this.saveProjectToolStripMenuItem.Text = "Save Project";
             this.saveProjectToolStripMenuItem.Click += new System.EventHandler(this.saveProjectToolStripMenuItem_Click);
             // 
             // openProjectToolStripMenuItem1
             // 
             this.openProjectToolStripMenuItem1.Name = "openProjectToolStripMenuItem1";
-            this.openProjectToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            this.openProjectToolStripMenuItem1.Size = new System.Drawing.Size(143, 22);
             this.openProjectToolStripMenuItem1.Text = "Open Project";
             this.openProjectToolStripMenuItem1.Click += new System.EventHandler(this.openProjectToolStripMenuItem1_Click);
             // 
             // saveLibraryToolStripMenuItem
             // 
             this.saveLibraryToolStripMenuItem.Name = "saveLibraryToolStripMenuItem";
-            this.saveLibraryToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.saveLibraryToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
             this.saveLibraryToolStripMenuItem.Text = "Save Library";
             this.saveLibraryToolStripMenuItem.Click += new System.EventHandler(this.saveLibraryToolStripMenuItem_Click);
             // 
             // openLibraryToolStripMenuItem
             // 
             this.openLibraryToolStripMenuItem.Name = "openLibraryToolStripMenuItem";
-            this.openLibraryToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.openLibraryToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
             this.openLibraryToolStripMenuItem.Text = "Open Library";
             this.openLibraryToolStripMenuItem.Click += new System.EventHandler(this.openLibraryToolStripMenuItem_Click);
             // 
@@ -204,6 +205,7 @@
         private System.Windows.Forms.ToolStripMenuItem saveLibraryToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openLibraryToolStripMenuItem;
         private System.Windows.Forms.OpenFileDialog openFileDialog;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog;
     }
 }
 

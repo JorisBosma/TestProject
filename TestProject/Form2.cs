@@ -35,8 +35,6 @@ namespace TestProject
             {
                 newNode = new Signal(Name);
             }
-            
-            
             MyTreeNode newTreeNode = new MyTreeNode(newNode);
             newTreeNode.Text = newNode.sNode;
             pNode.nNode.AddNode(newNode);
