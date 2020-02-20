@@ -37,6 +37,7 @@ namespace TestProject
         {
             CreateFromXML("proj.xml", treeView_proj);
             CreateFromXML("lib.xml", treeView_lib);
+            
         }
         public void PopulateTree(MyTreeNode MyTreeRoot, TreeView treeView)
         {
@@ -87,8 +88,6 @@ namespace TestProject
             //Open new form and give the (new) parent node 
             Form form2 = new Form2(selectedNode);
             form2.Show();
-
-
         }
         public void treeView_ItemDrag(object sender, ItemDragEventArgs e)
         {
@@ -98,12 +97,10 @@ namespace TestProject
                 DoDragDrop(e.Item, DragDropEffects.Move);
             }
         }
-
         public void treeView_DragEnter(object sender, DragEventArgs e)
         {
             e.Effect = e.AllowedEffect;
         }
-
         public void treeView_DragOver(object sender, DragEventArgs e)
         {
             TreeView treeView = sender as TreeView;
@@ -114,7 +111,6 @@ namespace TestProject
             // Select the node at the mouse position.
             treeView.SelectedNode = treeView.GetNodeAt(targetPoint);
         }
-
         public void treeView_DragDrop(object sender, DragEventArgs e)
         {
             TreeView treeView = sender as TreeView;
@@ -176,8 +172,6 @@ namespace TestProject
             // the second node.
             return ContainsNode(node1, node2.Parent);
         }
-
-
         private void treeview_Shift(object sender, KeyEventArgs e)
         {
             if (e.KeyCode != Keys.NumPad9 || e.KeyCode != Keys.NumPad3) return;
@@ -201,7 +195,6 @@ namespace TestProject
             pNode.nNode.InsertNode(i, cNode.nNode);
             treeView.SelectedNode = cNode;
         }
-
         private MyTreeNode SearchNode(string SearchText, MyTreeNode StartNode)
         {
             MyTreeNode node = null;
@@ -221,7 +214,6 @@ namespace TestProject
             }
             return node;
         }
-
         private void txtFilter_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == (char)13)
@@ -236,7 +228,6 @@ namespace TestProject
                 }
             }
         }
-
         private void saveProjectToolStripMenuItem_Click(object sender, EventArgs e)
         { 
             MyTreeNode root = (MyTreeNode)treeView_proj.Nodes[0];
@@ -265,7 +256,6 @@ namespace TestProject
             }
             System.IO.File.WriteAllText(File, rs);
         }
-
         private void openProjectToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             string File = "Test.xml";
@@ -318,7 +308,6 @@ namespace TestProject
             }
             System.IO.File.WriteAllText(File, rs);
         }
-
         private void openLibraryToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string File = "Test.xml";
@@ -344,7 +333,6 @@ namespace TestProject
             }
             CreateFromXML(File, treeView_lib);
         }
-
         public void CreateFromXML(string File, TreeView treeView)
         {
             string rs = System.IO.File.ReadAllText(File);
