@@ -26,7 +26,6 @@ namespace TestProject
         {
             string Name = txtName.Text;
             Node newNode = new Node(Name);
-            string sType = "Type1";
             if (Name == null) return;
             if(radioButton1.Checked == true)
             {
@@ -34,7 +33,7 @@ namespace TestProject
             }
             else if(radioButton2.Checked == true)
             {
-                newNode = new Signal(Name, sType);
+                newNode = new Signal(Name);
             }
             MyTreeNode newTreeNode = new MyTreeNode(newNode);
             newTreeNode.Text = newNode.sNode;

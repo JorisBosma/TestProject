@@ -46,6 +46,7 @@
             this.openLibraryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
+            this.label2 = new System.Windows.Forms.Label();
             this.rightClickMenu.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -91,14 +92,14 @@
             // treeView_lib
             // 
             this.treeView_lib.AllowDrop = true;
-            this.treeView_lib.Location = new System.Drawing.Point(402, 92);
+            this.treeView_lib.Location = new System.Drawing.Point(333, 92);
             this.treeView_lib.Name = "treeView_lib";
             this.treeView_lib.Size = new System.Drawing.Size(269, 405);
             this.treeView_lib.TabIndex = 2;
             // 
             // txtFilter
             // 
-            this.txtFilter.Location = new System.Drawing.Point(402, 53);
+            this.txtFilter.Location = new System.Drawing.Point(333, 53);
             this.txtFilter.Name = "txtFilter";
             this.txtFilter.Size = new System.Drawing.Size(269, 20);
             this.txtFilter.TabIndex = 6;
@@ -127,7 +128,7 @@
             this.openProjectToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(723, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(639, 24);
             this.menuStrip1.TabIndex = 10;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -174,11 +175,21 @@
             // 
             this.openFileDialog.FileName = "openFileDialog1";
             // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(333, 34);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(47, 13);
+            this.label2.TabIndex = 11;
+            this.label2.Text = "Zoeken:";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(723, 578);
+            this.ClientSize = new System.Drawing.Size(639, 556);
+            this.Controls.Add(this.label2);
             this.Controls.Add(this.menuStrip1);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.txtProjNr);
@@ -215,6 +226,7 @@
         public System.Windows.Forms.TreeView treeView_proj;
         public System.Windows.Forms.TreeView treeView_lib;
         public System.Windows.Forms.TextBox txtProjNr;
+        private System.Windows.Forms.Label label2;
     }
 }
 

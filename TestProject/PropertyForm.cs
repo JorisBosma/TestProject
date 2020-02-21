@@ -25,9 +25,7 @@ namespace TestProject
 
         private void PropertyForm_Load(object sender, EventArgs e)
         {
-            lblCurrentNode.Text = pNode.Text;
             propGridSignal.SelectedObject = pNode.nNode;
-         
         }
 
         private void btn_OK_Click(object sender, EventArgs e)
