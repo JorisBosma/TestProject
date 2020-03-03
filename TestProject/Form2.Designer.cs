@@ -36,6 +36,7 @@
             this.btnAdd = new System.Windows.Forms.Button();
             this.radioButton1 = new System.Windows.Forms.RadioButton();
             this.radioButton2 = new System.Windows.Forms.RadioButton();
+            this.cboxType = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // lblParent
@@ -78,11 +79,23 @@
             this.radioButton2.Name = "radioButton2";
             this.radioButton2.TabStop = true;
             this.radioButton2.UseVisualStyleBackColor = true;
+            this.radioButton2.CheckedChanged += new System.EventHandler(this.radioButton2_CheckedChanged);
+            // 
+            // cboxType
+            // 
+            this.cboxType.FormattingEnabled = true;
+            this.cboxType.Items.AddRange(new object[] {
+            resources.GetString("cboxType.Items"),
+            resources.GetString("cboxType.Items1"),
+            resources.GetString("cboxType.Items2")});
+            resources.ApplyResources(this.cboxType, "cboxType");
+            this.cboxType.Name = "cboxType";
             // 
             // Form2
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.cboxType);
             this.Controls.Add(this.radioButton2);
             this.Controls.Add(this.radioButton1);
             this.Controls.Add(this.lblParent);
@@ -106,5 +119,6 @@
         private System.Windows.Forms.Button btnAdd;
         private System.Windows.Forms.RadioButton radioButton1;
         private System.Windows.Forms.RadioButton radioButton2;
+        private System.Windows.Forms.ComboBox cboxType;
     }
 }

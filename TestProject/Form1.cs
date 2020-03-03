@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
 
+
 namespace TestProject
 {
     public partial class Form1 : Form
@@ -37,7 +38,10 @@ namespace TestProject
         {
             CreateFromXML("proj.xml", treeView_proj);
             CreateFromXML("lib.xml", treeView_lib);
-
+            Device d = new Device("testDevice");
+            Signal s = new Signal("testSignal", "testType");
+            d.Signals.Add(s);
+            Console.WriteLine(s.IO);   
         }
         public void PopulateTree(MyTreeNode MyTreeRoot, TreeView treeView)
         {
@@ -74,7 +78,6 @@ namespace TestProject
             pNode.nNode.RemoveNode(selectedNode.nNode);
             selectedNode.Remove();
         }
-
         private void btnToevoegen_Click(object sender, EventArgs e)
         {
             //set sender as toolstrip item to make properties accessable
@@ -89,6 +92,7 @@ namespace TestProject
             Form form2 = new Form2(selectedNode);
             form2.Show();
         }
+
         public void treeView_ItemDrag(object sender, ItemDragEventArgs e)
         {
             // Move the dragged node when the left mouse button is used.
@@ -161,6 +165,7 @@ namespace TestProject
                 targetNode.Expand();
             }
         }
+
         private bool ContainsNode(TreeNode node1, TreeNode node2)
         {
             // Check the parent node of the second node.            
@@ -197,12 +202,13 @@ namespace TestProject
                 treeView.SelectedNode = cNode;
             }
         }
+
         private MyTreeNode SearchNode(string SearchText, MyTreeNode StartNode)
         {
             MyTreeNode treeNode = null;
             while (StartNode != null)
             {
-                if (StartNode.nNode.sNode.ToLower().Contains(SearchText.ToLower()))
+                if (StartNode.nNode.containsNode(SearchText))
                 {
                     treeNode = StartNode;
                     break;
@@ -212,9 +218,8 @@ namespace TestProject
                     treeNode = SearchNode(SearchText, (MyTreeNode)StartNode.Nodes[0]);//Recursive Search
                     if (treeNode != null) break;
                 }
-                StartNode = (MyTreeNode)StartNode.NextNode;
+                StartNode = (MyTreeNode)StartNode.NextNode;   
             }
-            treeNode.nNode = StartNode.nNode.searchNode(SearchText);
             return treeNode;
         }
         private void txtFilter_KeyPress(object sender, KeyPressEventArgs e)
@@ -223,7 +228,9 @@ namespace TestProject
             {
                 string search = txtFilter.Text;
                 if (search.Count() < 3) return;
-                MyTreeNode SelectedNode = SearchNode(search, (MyTreeNode)treeView_lib.Nodes[0]);
+                MyTreeNode startNode = (MyTreeNode)treeView_lib.Nodes[0];
+                
+                MyTreeNode SelectedNode = SearchNode(search, startNode);
                 if (SelectedNode != null)
                 {
                     treeView_lib.SelectedNode = SelectedNode;
@@ -231,12 +238,13 @@ namespace TestProject
                 }
             }
         }
-        private void saveProjectToolStripMenuItem_Click(object sender, EventArgs e)
+
+        private void saveProjectToolStripMenuItem_Click(object sender, EventArgs e) //ALSO WRITES HTML TABLE
         {
             MyTreeNode root = (MyTreeNode)treeView_proj.Nodes[0];
 
             //start writing all nodes to overarching element
-            string rs = "<?xml version='1.0' encoding='UTF-8'?>\n<XML>\n<project projectnr='" + txtProjNr.Text + "'></project>\n<LastEdit Editor='" + Environment.UserName + "'></LastEdit>\n";
+            string rs = "<?xml version='1.0' encoding='UTF-8'?>\n<XML>\n<project projectnr='123456789'></project>\n<LastEdit Editor='" + Environment.UserName + "'></LastEdit>\n";
             rs = rs + root.nNode.GenerateXML() + "</XML>";
             //Console.WriteLine(rs);
             string File = "Test.xml";
@@ -257,6 +265,8 @@ namespace TestProject
             {
                 File = saveFileDialog.FileName;
             }
+            HTMLwriter ht = new HTMLwriter();
+            ht.ConvertXmlToHtmlTable(rs);
             System.IO.File.WriteAllText(File, rs);
         }
         private void openProjectToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -336,6 +346,7 @@ namespace TestProject
             }
             CreateFromXML(File, treeView_lib);
         }
+
         public void CreateFromXML(string File, TreeView treeView)
         {
             string rs = System.IO.File.ReadAllText(File);
@@ -356,264 +367,39 @@ namespace TestProject
             //then put the parent's tag into treeview
             TreeView treeView = (TreeView)pbutton.Tag;
             MyTreeNode selectedNode = (MyTreeNode)treeView.SelectedNode;
-
             //Open new form and give the (new) parent node 
             Form propForm = new PropertyForm(selectedNode, this);
             propForm.Show();
         }
     }
-
     //---------------------------CLASSES----------------------------------------------------------------------------------------------------------------------
-    public class MyTreeNode : TreeNode
-    {
-        public Node nNode;
-        public MyTreeNode(Node n)
-        {
-            this.nNode = n;
-        }
-        public void getTreeNodes()
-        {
-            if (this.nNode.GetClass() == "Device")
-            {
-                Device d = (Device)this.nNode;
-                foreach (Signal s in d.Signals)
-                {
-                    MyTreeNode a = new MyTreeNode(s);
-                    a.Text = a.nNode.sNode;
-                    this.Nodes.Add(a);
-                }
-            }
-            foreach (Node n in this.nNode.Nodes)
-            {
-                MyTreeNode a = new MyTreeNode(n);
-                a.getTreeNodes();
-                a.Text = a.nNode.sNode;
-                this.Nodes.Add(a);
-            }
-        }
-    }
-
-    public class Node
-    {
-        public List<Node> Nodes { get; set; }
-        public string sNode { get; set; }
-
-        public Node(string label)
-        {
-            this.Nodes = new List<Node>();
-            this.sNode = label;
-        }
-
-        public virtual void AddNode(Node n)
-        {
-            Nodes.Add(n);
-        }
-        public virtual void RemoveNode(Node n)
-        {
-            Nodes.Remove(n);
-        }
-        public void InsertNode(Int32 i, Node n)
-        {
-            if (i < 0) return;
-            if (i > Nodes.Count()) return;
-            Nodes.Insert(i, n);
-        }
-        public virtual string GetClass()
-        {
-            return "Node";
-        }
-        public virtual string GenerateXML()
-        {
-            String result;
-            result = "<Node name='" + this.sNode + "'>\n";
-            foreach (Node n in this.Nodes)
-            {
-                result = result + n.GenerateXML();
-            }
-            result = result + "</Node>\n";
-            return result;
-        }
-        public virtual Node searchNode(string s)
-        {
-            Node node = null;
-            if (this.sNode.ToLower().Contains(s.ToLower()))
-            {
-                node = this;
-            }
-            else
-            {
-                this.searchNode(s);
-            }
-            return node;
-        }
-        public virtual void parseXML(XmlElement e)
-        {
-            XmlElement t = null;
-            if (e.Name == "Node")
-            {
-                string s = e.GetAttribute("name");
-                Node newNode = new Node(s);
-                this.Nodes.Add(newNode);
-                if (e.HasChildNodes == true)
-                {
-                    t = (XmlElement)e.ChildNodes[0];
-                    newNode.parseXML(t);
-                }
-                t = (XmlElement)e.NextSibling;
-                if (t != null)
-                {
-                    this.parseXML(t);
-                }
-            }
-            else if (e.Name == "Device")
-            {
-                string s = e.GetAttribute("name");
-                string merk = e.GetAttribute("merk");
-                string soort = e.GetAttribute("soort");
-                string type = e.GetAttribute("type");
-                string omschrijving = e.GetAttribute("omschrijving");
-                Device newNode = new Device(s);
-                newNode.Merk = merk;
-                newNode.Soort = soort;
-                newNode.Type = type;
-                newNode.Omschrijving = omschrijving;
-                this.Nodes.Add(newNode);
-                if (e.HasChildNodes == true)
-                {
-                    t = (XmlElement)e.ChildNodes[0];
-                    newNode.parseXML(t);
-                }
-                t = (XmlElement)e.NextSibling;
-                if (t != null)
-                {
-                    this.parseXML(t);
-                }
-            }
-            else if (e.Name == "Signal")
-            {
-                string s = e.GetAttribute("name");
-                Signal newNode = new Signal(s);
-                this.Nodes.Add(newNode);
-                if (e.HasChildNodes == true)
-                {
-                    t = (XmlElement)e.ChildNodes[0];
-                    newNode.parseXML(t);
-                }
-                t = (XmlElement)e.NextSibling;
-                if (t != null)
-                {
-                    this.parseXML(t);
-                }
-            }
-            else if (t == null)
-            {
-                t = (XmlElement)e.NextSibling;
-                if (t != null)
-                {
-                    this.parseXML(t);
-                }
-                else if (e.HasChildNodes)
-                {
-                    t = (XmlElement)e.ChildNodes[0];
-                    this.parseXML(t);
-                }
-            }
-        }
-    }
-
-    public class Device : Node
-    {
-        public List<Signal> Signals { get; set; }
-        public string Merk { get; set; }                         //Schneider etc.
-        public string Soort { get; set; }                        //Temp, Druk, pomp etc.
-        public string Omschrijving { get; set; }                 //Omschrijving
-        public string Type { get; set; }                         //STC100, STP100-50, Magna3 etc.
-        public Device(string sNode) : base(sNode)
-        {
-            this.Signals = new List<Signal>();
-        }
-
-        public override void AddNode(Node s)
-        {
-            if (s.GetClass() != "Signal") return;
-            Signals.Add((Signal)s);
-        }
-        public override void RemoveNode(Node s)
-        {
-            if (s.GetClass() != "Signal") return;
-            Signals.Remove((Signal)s);
-        }
-        public override string GenerateXML()
-        {
-            String result;
-            result = "<Device name='" + this.sNode + "' merk='" + this.Merk + "' soort='" + this.Soort + "' omschrijving='" + this.Omschrijving + "' type='" + this.Type + "'>\n";
-            foreach (Node n in this.Nodes)
-            {
-                result = result + n.GenerateXML();
-            }
-            foreach (Signal s in this.Signals)
-            {
-                result = result + s.GenerateXML();
-            }
-            result = result + "</Device>\n";
-            return result;
-        }
-        public override string GetClass()
-        {
-            return "Device";
-        }
-        public override Node searchNode(string s)
-        {
-            Node node = null;
-            if (this.sNode.ToLower().Contains(s.ToLower()) || this.Merk.ToLower().Contains(s.ToLower()))
-            {
-                node = this;
-            }
-            else
-            {
-                this.searchNode(s);
-            }
-            return node;
-
-        }
-        public override void parseXML(XmlElement e)
-        {
-            XmlElement t = null;
-            if (e.Name == "Signal")
-            {
-                string s = e.GetAttribute("name");
-                Signal newNode = new Signal(s);
-                this.Signals.Add(newNode);
-                if (e.HasChildNodes == true)
-                {
-                    t = (XmlElement)e.ChildNodes[0];
-                    newNode.parseXML(t);
-                }
-                t = (XmlElement)e.NextSibling;
-                if (t != null)
-                {
-                    this.parseXML(t);
-                }
-            }
-        }
-    }
     public class Signal : Node
     {
-        public string IO;
-        public Signal(string sNode) : base(sNode)
+        public bool IO { get; set; }
+        public string type { get; set; }
+        public Signal(string sNode, string type) : base(sNode)
         {
-
+            this.type = type; 
         }
         public override string GenerateXML()
         {
             String result;
-            result = "<Signal name='" + this.sNode + "'>\n</Signal>\n";
+            result = "<Signal name='" + this.sNode + "' IO='"+ this.IO + "' type='" + this.type + "'>\n</Signal>\n";
             return result;
+        }
+        public override bool containsNode(string s)
+        {
+            if (this.sNode.ToLower().Contains(s.ToLower()))
+            {
+                return true;
+            }
+            return false;
         }
         public override string GetClass()
         {
             return "Signal";
         }
     }
+    
 }
     

@@ -36,8 +36,6 @@
             this.propertiesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.treeView_lib = new System.Windows.Forms.TreeView();
             this.txtFilter = new System.Windows.Forms.TextBox();
-            this.txtProjNr = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.openProjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveProjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -105,23 +103,6 @@
             this.txtFilter.TabIndex = 6;
             this.txtFilter.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtFilter_KeyPress);
             // 
-            // txtProjNr
-            // 
-            this.txtProjNr.Location = new System.Drawing.Point(101, 53);
-            this.txtProjNr.Name = "txtProjNr";
-            this.txtProjNr.Size = new System.Drawing.Size(203, 20);
-            this.txtProjNr.TabIndex = 7;
-            this.txtProjNr.Text = "123456789";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(31, 60);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(52, 13);
-            this.label1.TabIndex = 8;
-            this.label1.Text = "Projectnr:";
-            // 
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -146,28 +127,28 @@
             // saveProjectToolStripMenuItem
             // 
             this.saveProjectToolStripMenuItem.Name = "saveProjectToolStripMenuItem";
-            this.saveProjectToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
+            this.saveProjectToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.saveProjectToolStripMenuItem.Text = "Save Project";
             this.saveProjectToolStripMenuItem.Click += new System.EventHandler(this.saveProjectToolStripMenuItem_Click);
             // 
             // openProjectToolStripMenuItem1
             // 
             this.openProjectToolStripMenuItem1.Name = "openProjectToolStripMenuItem1";
-            this.openProjectToolStripMenuItem1.Size = new System.Drawing.Size(143, 22);
+            this.openProjectToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
             this.openProjectToolStripMenuItem1.Text = "Open Project";
             this.openProjectToolStripMenuItem1.Click += new System.EventHandler(this.openProjectToolStripMenuItem1_Click);
             // 
             // saveLibraryToolStripMenuItem
             // 
             this.saveLibraryToolStripMenuItem.Name = "saveLibraryToolStripMenuItem";
-            this.saveLibraryToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
+            this.saveLibraryToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.saveLibraryToolStripMenuItem.Text = "Save Library";
             this.saveLibraryToolStripMenuItem.Click += new System.EventHandler(this.saveLibraryToolStripMenuItem_Click);
             // 
             // openLibraryToolStripMenuItem
             // 
             this.openLibraryToolStripMenuItem.Name = "openLibraryToolStripMenuItem";
-            this.openLibraryToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
+            this.openLibraryToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.openLibraryToolStripMenuItem.Text = "Open Library";
             this.openLibraryToolStripMenuItem.Click += new System.EventHandler(this.openLibraryToolStripMenuItem_Click);
             // 
@@ -191,8 +172,6 @@
             this.ClientSize = new System.Drawing.Size(639, 556);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.menuStrip1);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.txtProjNr);
             this.Controls.Add(this.txtFilter);
             this.Controls.Add(this.treeView_lib);
             this.Controls.Add(this.treeView_proj);
@@ -213,7 +192,6 @@
         private System.Windows.Forms.ToolStripMenuItem btnToevoegen;
         private System.Windows.Forms.ToolStripMenuItem btnVerwijderen;
         private System.Windows.Forms.TextBox txtFilter;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem openProjectToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveProjectToolStripMenuItem;
@@ -225,7 +203,6 @@
         private System.Windows.Forms.ToolStripMenuItem propertiesToolStripMenuItem;
         public System.Windows.Forms.TreeView treeView_proj;
         public System.Windows.Forms.TreeView treeView_lib;
-        public System.Windows.Forms.TextBox txtProjNr;
         private System.Windows.Forms.Label label2;
     }
 }

@@ -20,8 +20,6 @@ namespace TestProject
             this.StartPosition = FormStartPosition.Manual;
             this.Location = new Point(0, 0);
         }
-
-        
         private void btnAdd_Click(object sender, EventArgs e)
         {
             string Name = txtName.Text;
@@ -33,7 +31,8 @@ namespace TestProject
             }
             else if(radioButton2.Checked == true)
             {
-                newNode = new Signal(Name);
+                string type = cboxType.SelectedItem.ToString();
+                newNode = new Signal(Name, type);
             }
             MyTreeNode newTreeNode = new MyTreeNode(newNode);
             newTreeNode.Text = newNode.sNode;
@@ -41,20 +40,22 @@ namespace TestProject
             pNode.Nodes.Add(newTreeNode);
             pNode.Expand();
         }
-
         private void btnClose_Click(object sender, EventArgs e)
         {
             this.Close();
         }
-
         private void Form2_Load(object sender, EventArgs e)
         {
             lblParent.Text = pNode.nNode.sNode;
+            cboxType.Hide();
         }
 
-        
-        
+        private void radioButton2_CheckedChanged(object sender, EventArgs e)
+        {
+            if(radioButton2.Checked == true)
+            {
+                cboxType.Show();
+            }
+        }
     }
-
-    
 }
