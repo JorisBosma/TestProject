@@ -53,7 +53,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(329, 447);
+            this.ClientSize = new System.Drawing.Size(367, 447);
             this.Controls.Add(this.btn_OK);
             this.Controls.Add(this.propGridSignal);
             this.Name = "PropertyForm";

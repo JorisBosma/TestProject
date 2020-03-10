@@ -14,8 +14,8 @@ namespace TestProject
     public class Device : Node
     {
         public List<Signal> Signals { get; set; }
-        public string Merk { get; set; }                         //Schneider etc.
-        public string Soort { get; set; }                        //Temp, Druk, pomp etc.
+        public string Merk { get; set; }
+        public string Soort { get; set; }
         public string Omschrijving { get; set; }                 //Omschrijving
         public string Type { get; set; }                         //STC100, STP100-50, Magna3 etc.
         [Browsable(false)]
@@ -27,7 +27,7 @@ namespace TestProject
         }
         public override void AddNode(Node s)
         {
-            if (s.GetClass() != "Signal") return;
+            if (s.GetClass() != "Signal") return;                //Only signals can be added to a device (This is only in the data)
             Signals.Add((Signal)s);
         }
         public override void RemoveNode(Node s)
@@ -74,6 +74,7 @@ namespace TestProject
                 newNode.IO = b;
                 newNode.type = type;
                 this.Signals.Add(newNode);
+
                 if (e.HasChildNodes == true)
                 {
                     t = (XmlElement)e.ChildNodes[0];

@@ -12,7 +12,7 @@ namespace TestProject
 {
     public partial class Form2 : Form
     {
-        public MyTreeNode pNode;
+        public MyTreeNode pNode; //this is the node on which you clicked
         public Form2(MyTreeNode p)
         {
             this.pNode = p;
@@ -36,8 +36,16 @@ namespace TestProject
             }
             MyTreeNode newTreeNode = new MyTreeNode(newNode);
             newTreeNode.Text = newNode.sNode;
-            pNode.nNode.AddNode(newNode);
-            pNode.Nodes.Add(newTreeNode);
+            pNode.nNode.AddNode(newNode); 
+            if((pNode.nNode.GetClass() == "Device" && newNode.GetClass() != "Signal") || (pNode.nNode.GetClass() == "Node" && newNode.GetClass() == "Signal") || (pNode.nNode.GetClass() == "Signal"))
+            {
+                return;
+            }
+            else
+            {
+                pNode.Nodes.Add(newTreeNode);
+            }
+            
             pNode.Expand();
         }
         private void btnClose_Click(object sender, EventArgs e)
@@ -49,7 +57,6 @@ namespace TestProject
             lblParent.Text = pNode.nNode.sNode;
             cboxType.Hide();
         }
-
         private void radioButton2_CheckedChanged(object sender, EventArgs e)
         {
             if(radioButton2.Checked == true)

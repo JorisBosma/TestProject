@@ -157,7 +157,15 @@ namespace TestProject
                         //Remove and Add node in the tree
                         //Always do this after manipulating the data, otherwise the parentNode is not accurate                    
                         draggedNode.Remove();
-                        targetNode.Nodes.Add(draggedNode); //Put dragged node on top (bottom is default)
+                        if ((targetNode.nNode.GetClass() == "Device" && draggedNode.nNode.GetClass() != "Signal") || (targetNode.nNode.GetClass() == "Node" && draggedNode.nNode.GetClass() == "Signal") || (targetNode.nNode.GetClass() == "Signal"))
+                        {
+                            return;
+                        }
+                        else
+                        {
+                            targetNode.Nodes.Add(draggedNode); //Put dragged node on top (bottom is default)
+                        }
+                        
                     }
                 }
                 // Expand the node at the location 
@@ -236,6 +244,7 @@ namespace TestProject
                     treeView_lib.SelectedNode = SelectedNode;
                     this.treeView_lib.Select();
                 }
+          
             }
         }
 
@@ -372,38 +381,8 @@ namespace TestProject
             propForm.Show();
         }
     }
-    //---------------------------CLASSES----------------------------------------------------------------------------------------------------------------------
-    public class Signal : Node
-    {
-        public bool IO { get; set; }
-        public string type { get; set; }
-        [Browsable(false)]
-        public override List<Node> Nodes { get; set; }
-
-        public Signal(string sNode, string type) : base(sNode)
-        {
-            this.type = type;
-        }
-
-        public override string GenerateXML()
-        {
-            String result;
-            result = "<Signal name='" + this.sNode + "' IO='"+ this.IO + "' type='" + this.type + "'>\n</Signal>\n";
-            return result;
-        }
-        public override bool containsNode(string s)
-        {
-            if (this.sNode.ToLower().Contains(s.ToLower()))
-            {
-                return true;
-            }
-            return false;
-        }
-        public override string GetClass()
-        {
-            return "Signal";
-        }
-    }
+  
+    
     
 }
     

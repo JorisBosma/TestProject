@@ -36,7 +36,8 @@
             this.btnAdd = new System.Windows.Forms.Button();
             this.radioButton1 = new System.Windows.Forms.RadioButton();
             this.radioButton2 = new System.Windows.Forms.RadioButton();
-            this.cboxType = new System.Windows.Forms.ComboBox();
+            this.cboxType = new System.Windows.Forms.CheckedListBox();
+            this.IO = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // lblParent
@@ -91,10 +92,17 @@
             resources.ApplyResources(this.cboxType, "cboxType");
             this.cboxType.Name = "cboxType";
             // 
+            // IO
+            // 
+            resources.ApplyResources(this.IO, "IO");
+            this.IO.Name = "IO";
+            this.IO.UseVisualStyleBackColor = true;
+            // 
             // Form2
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.IO);
             this.Controls.Add(this.cboxType);
             this.Controls.Add(this.radioButton2);
             this.Controls.Add(this.radioButton1);
@@ -119,6 +127,7 @@
         private System.Windows.Forms.Button btnAdd;
         private System.Windows.Forms.RadioButton radioButton1;
         private System.Windows.Forms.RadioButton radioButton2;
-        private System.Windows.Forms.ComboBox cboxType;
+        private System.Windows.Forms.CheckedListBox cboxType;
+        private System.Windows.Forms.CheckBox IO;
     }
 }

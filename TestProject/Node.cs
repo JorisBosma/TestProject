@@ -1,9 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using System.Xml;
+
 
 namespace TestProject
 {
@@ -11,6 +16,7 @@ namespace TestProject
     {
         public Node searchRet;
         public virtual List<Node> Nodes { get; set; }
+        [DisplayName("Name")]
         public string sNode { get; set; }
 
         public Node(string label)
@@ -20,6 +26,7 @@ namespace TestProject
         }
         public virtual void AddNode(Node n)
         {
+            if (n.GetClass() == "Signal") return;
             Nodes.Add(n);
         }
         public virtual void RemoveNode(Node n)
@@ -76,6 +83,7 @@ namespace TestProject
             }
             else if (e.Name == "Device")
             {
+                
                 string s = e.GetAttribute("name");
                 string merk = e.GetAttribute("merk");
                 string soort = e.GetAttribute("soort");

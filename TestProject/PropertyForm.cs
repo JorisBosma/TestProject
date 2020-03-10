@@ -16,8 +16,6 @@ namespace TestProject
         Form1 form1;
         public PropertyForm(MyTreeNode p, Form1 form1)
         {
-            
-
             this.pNode = p;
             InitializeComponent();
 
@@ -29,12 +27,6 @@ namespace TestProject
         private void PropertyForm_Load(object sender, EventArgs e)
         {
             propGridSignal.SelectedObject = pNode.nNode;
-            /*if (pNode.nNode.GetClass() == "Signal") 
-            {
-                //when it's a signal i want to hide the NODES collection
-                
-                
-            }*/
         }
 
         private void btn_OK_Click(object sender, EventArgs e)
