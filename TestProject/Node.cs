@@ -10,7 +10,7 @@ namespace TestProject
     public class Node
     {
         public Node searchRet;
-        public List<Node> Nodes { get; set; }
+        public virtual List<Node> Nodes { get; set; }
         public string sNode { get; set; }
 
         public Node(string label)

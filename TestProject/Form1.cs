@@ -377,10 +377,14 @@ namespace TestProject
     {
         public bool IO { get; set; }
         public string type { get; set; }
+        [Browsable(false)]
+        public override List<Node> Nodes { get; set; }
+
         public Signal(string sNode, string type) : base(sNode)
         {
-            this.type = type; 
+            this.type = type;
         }
+
         public override string GenerateXML()
         {
             String result;

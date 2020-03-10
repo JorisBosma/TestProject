@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using System.Xml;
 
 namespace TestProject
@@ -14,11 +18,13 @@ namespace TestProject
         public string Soort { get; set; }                        //Temp, Druk, pomp etc.
         public string Omschrijving { get; set; }                 //Omschrijving
         public string Type { get; set; }                         //STC100, STP100-50, Magna3 etc.
+        [Browsable(false)]
+        public override List<Node> Nodes { get; set; }
+
         public Device(string sNode) : base(sNode)
         {
             this.Signals = new List<Signal>();
         }
-
         public override void AddNode(Node s)
         {
             if (s.GetClass() != "Signal") return;
