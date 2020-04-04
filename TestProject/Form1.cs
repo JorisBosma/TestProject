@@ -163,7 +163,7 @@ namespace TestProject
                         }
                         else
                         {
-                            targetNode.Nodes.Add(draggedNode); //Put dragged node on top (bottom is default)
+                            targetNode.Nodes.Add(draggedNode); //Put dragged node on top (bottom is default)a
                         }
                         
                     }
