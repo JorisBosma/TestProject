@@ -157,6 +157,17 @@ namespace TestProject
                         //Remove and Add node in the tree
                         //Always do this after manipulating the data, otherwise the parentNode is not accurate                    
                         draggedNode.Remove();
+                        if(targetNode.nNode.GetClass() == "Signal" && draggedNode.nNode.GetClass() == "Signal")
+                        {
+                            Signal sTarget = (Signal)targetNode.nNode;
+                            Signal sDragged = (Signal)draggedNode.nNode;
+                            sTarget.Connect(sDragged);
+                            System.Console.WriteLine("Connected: "+sTarget.ConnectedSignal.sNode + sDragged.ConnectedSignal.sNode);
+                            sTarget.Disconnnect(sDragged);
+                            //System.Console.WriteLine("Connected: " + sTarget.ConnectedSignal.sNode + sDragged.ConnectedSignal.sNode);
+
+
+                        }
                         if ((targetNode.nNode.GetClass() == "Device" && draggedNode.nNode.GetClass() != "Signal") || (targetNode.nNode.GetClass() == "Node" && draggedNode.nNode.GetClass() == "Signal") || (targetNode.nNode.GetClass() == "Signal"))
                         {
                             return;
