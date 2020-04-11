@@ -16,6 +16,7 @@ namespace TestProject
     {
         public bool IO { get; set; }
         public string type { get; set; }
+        public Signal ConnectedSignal { get; set; }
         [Browsable(false)]
         public override List<Node> Nodes { get; set; }
 
@@ -32,6 +33,22 @@ namespace TestProject
             String result;
             result = "<Signal name='" + this.sNode + "' IO='" + this.IO + "' type='" + this.type + "'>\n</Signal>\n";
             return result;
+        }
+        public void Connect(Signal s)
+        {
+            this.ConnectedSignal = s;
+            if(s.ConnectedSignal != this)
+            {
+                s.Connect(this);
+            }
+        }
+        public void Disconnnect(Signal s)
+        {
+            this.ConnectedSignal = null;
+            if(s.ConnectedSignal == this)
+            {
+                s.Disconnnect(this);
+            }
         }
         public override bool containsNode(string s)
         {
