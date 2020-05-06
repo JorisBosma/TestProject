@@ -30,26 +30,39 @@ namespace TestProject
         }
         public override string GenerateXML()
         {
-            String result;
-            result = "<Signal name='" + this.sNode + "' IO='" + this.IO + "' type='" + this.type + "'>\n</Signal>\n";
+            string conSig;
+            if(this.ConnectedSignal != null)
+            {
+                 conSig = this.ConnectedSignal.sNode;
+            }
+            else
+            {
+                 conSig = "";
+            }
+            string result;
+            result = "<Signal name='" + this.sNode + "' IO='" + this.IO + "' type='" + this.type + "' ConnectedSig='" + conSig + "'>\n</Signal>\n";
             return result;
         }
         public void Connect(Signal s)
         {
             this.ConnectedSignal = s;
+        
             if(s.ConnectedSignal != this)
             {
                 s.Connect(this);
             }
         }
-        public void Disconnnect(Signal s)
+        public void Disconnnect()
         {
+            Signal s = this.ConnectedSignal;
             this.ConnectedSignal = null;
             if(s.ConnectedSignal == this)
             {
-                s.Disconnnect(this);
+                s.Disconnnect();
             }
         }
+       
+        
         public override bool containsNode(string s)
         {
             if (this.sNode.ToLower().Contains(s.ToLower()))

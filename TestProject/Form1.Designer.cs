@@ -34,6 +34,7 @@
             this.btnToevoegen = new System.Windows.Forms.ToolStripMenuItem();
             this.btnVerwijderen = new System.Windows.Forms.ToolStripMenuItem();
             this.propertiesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.disconnectSignalsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.treeView_lib = new System.Windows.Forms.TreeView();
             this.txtFilter = new System.Windows.Forms.TextBox();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
@@ -45,6 +46,7 @@
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.label2 = new System.Windows.Forms.Label();
+            this.treeView_sig = new System.Windows.Forms.TreeView();
             this.rightClickMenu.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -62,42 +64,50 @@
             this.rightClickMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.btnToevoegen,
             this.btnVerwijderen,
-            this.propertiesToolStripMenuItem});
+            this.propertiesToolStripMenuItem,
+            this.disconnectSignalsToolStripMenuItem});
             this.rightClickMenu.Name = "rightClickMenu";
-            this.rightClickMenu.Size = new System.Drawing.Size(136, 70);
+            this.rightClickMenu.Size = new System.Drawing.Size(174, 92);
             // 
             // btnToevoegen
             // 
             this.btnToevoegen.Name = "btnToevoegen";
-            this.btnToevoegen.Size = new System.Drawing.Size(135, 22);
+            this.btnToevoegen.Size = new System.Drawing.Size(173, 22);
             this.btnToevoegen.Text = "Toevoegen";
             this.btnToevoegen.Click += new System.EventHandler(this.btnToevoegen_Click);
             // 
             // btnVerwijderen
             // 
             this.btnVerwijderen.Name = "btnVerwijderen";
-            this.btnVerwijderen.Size = new System.Drawing.Size(135, 22);
+            this.btnVerwijderen.Size = new System.Drawing.Size(173, 22);
             this.btnVerwijderen.Text = "Verwijderen";
             this.btnVerwijderen.Click += new System.EventHandler(this.btnVerwijderen_Click);
             // 
             // propertiesToolStripMenuItem
             // 
             this.propertiesToolStripMenuItem.Name = "propertiesToolStripMenuItem";
-            this.propertiesToolStripMenuItem.Size = new System.Drawing.Size(135, 22);
+            this.propertiesToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
             this.propertiesToolStripMenuItem.Text = "Properties";
             this.propertiesToolStripMenuItem.Click += new System.EventHandler(this.propertiesToolStripMenuItem_Click);
+            // 
+            // disconnectSignalsToolStripMenuItem
+            // 
+            this.disconnectSignalsToolStripMenuItem.Name = "disconnectSignalsToolStripMenuItem";
+            this.disconnectSignalsToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
+            this.disconnectSignalsToolStripMenuItem.Text = "Disconnect Signals";
+            this.disconnectSignalsToolStripMenuItem.Click += new System.EventHandler(this.disconnectSignalsToolStripMenuItem_Click);
             // 
             // treeView_lib
             // 
             this.treeView_lib.AllowDrop = true;
-            this.treeView_lib.Location = new System.Drawing.Point(333, 92);
+            this.treeView_lib.Location = new System.Drawing.Point(629, 92);
             this.treeView_lib.Name = "treeView_lib";
             this.treeView_lib.Size = new System.Drawing.Size(269, 405);
             this.treeView_lib.TabIndex = 2;
             // 
             // txtFilter
             // 
-            this.txtFilter.Location = new System.Drawing.Point(333, 53);
+            this.txtFilter.Location = new System.Drawing.Point(629, 50);
             this.txtFilter.Name = "txtFilter";
             this.txtFilter.Size = new System.Drawing.Size(269, 20);
             this.txtFilter.TabIndex = 6;
@@ -109,7 +119,7 @@
             this.openProjectToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(639, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(910, 24);
             this.menuStrip1.TabIndex = 10;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -127,28 +137,28 @@
             // saveProjectToolStripMenuItem
             // 
             this.saveProjectToolStripMenuItem.Name = "saveProjectToolStripMenuItem";
-            this.saveProjectToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.saveProjectToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
             this.saveProjectToolStripMenuItem.Text = "Save Project";
             this.saveProjectToolStripMenuItem.Click += new System.EventHandler(this.saveProjectToolStripMenuItem_Click);
             // 
             // openProjectToolStripMenuItem1
             // 
             this.openProjectToolStripMenuItem1.Name = "openProjectToolStripMenuItem1";
-            this.openProjectToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            this.openProjectToolStripMenuItem1.Size = new System.Drawing.Size(143, 22);
             this.openProjectToolStripMenuItem1.Text = "Open Project";
             this.openProjectToolStripMenuItem1.Click += new System.EventHandler(this.openProjectToolStripMenuItem1_Click);
             // 
             // saveLibraryToolStripMenuItem
             // 
             this.saveLibraryToolStripMenuItem.Name = "saveLibraryToolStripMenuItem";
-            this.saveLibraryToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.saveLibraryToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
             this.saveLibraryToolStripMenuItem.Text = "Save Library";
             this.saveLibraryToolStripMenuItem.Click += new System.EventHandler(this.saveLibraryToolStripMenuItem_Click);
             // 
             // openLibraryToolStripMenuItem
             // 
             this.openLibraryToolStripMenuItem.Name = "openLibraryToolStripMenuItem";
-            this.openLibraryToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.openLibraryToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
             this.openLibraryToolStripMenuItem.Text = "Open Library";
             this.openLibraryToolStripMenuItem.Click += new System.EventHandler(this.openLibraryToolStripMenuItem_Click);
             // 
@@ -159,17 +169,25 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(333, 34);
+            this.label2.Location = new System.Drawing.Point(626, 34);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(47, 13);
             this.label2.TabIndex = 11;
             this.label2.Text = "Zoeken:";
             // 
+            // treeView_sig
+            // 
+            this.treeView_sig.Location = new System.Drawing.Point(335, 92);
+            this.treeView_sig.Name = "treeView_sig";
+            this.treeView_sig.Size = new System.Drawing.Size(262, 405);
+            this.treeView_sig.TabIndex = 12;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(639, 556);
+            this.ClientSize = new System.Drawing.Size(910, 556);
+            this.Controls.Add(this.treeView_sig);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.menuStrip1);
             this.Controls.Add(this.txtFilter);
@@ -204,6 +222,8 @@
         public System.Windows.Forms.TreeView treeView_proj;
         public System.Windows.Forms.TreeView treeView_lib;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.ToolStripMenuItem disconnectSignalsToolStripMenuItem;
+        public System.Windows.Forms.TreeView treeView_sig;
     }
 }
 

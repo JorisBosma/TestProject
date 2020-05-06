@@ -18,6 +18,7 @@ namespace TestProject
         public string Soort { get; set; }
         public string Omschrijving { get; set; }                 //Omschrijving
         public string Type { get; set; }                         //STC100, STP100-50, Magna3 etc.
+        public string ToConnnect;
         [Browsable(false)]
         public override List<Node> Nodes { get; set; }
 
@@ -70,9 +71,12 @@ namespace TestProject
                 bool b = bool.Parse(e.GetAttribute("IO"));
                 string type = e.GetAttribute("type");
                 string s = e.GetAttribute("name");
-                Signal newNode = new Signal(s, "testType");
+                Signal newNode = new Signal(s, type);
+                
+
                 newNode.IO = b;
                 newNode.type = type;
+                
                 this.Signals.Add(newNode);
 
                 if (e.HasChildNodes == true)
@@ -81,7 +85,7 @@ namespace TestProject
                     newNode.parseXML(t);
                 }
                 t = (XmlElement)e.NextSibling;
-                if (t != null)
+                if (t != null) 
                 {
                     this.parseXML(t);
                 }

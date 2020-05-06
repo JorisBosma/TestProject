@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace TestProject
-{                       //sNode is now the name, i want this to be "name" or something like that to make it more readable
+{                      
     public partial class PropertyForm : Form
     {
         public MyTreeNode pNode;
@@ -23,12 +23,10 @@ namespace TestProject
             this.Location = new Point(0, 0);
             this.form1 = form1;
         }
-
         private void PropertyForm_Load(object sender, EventArgs e)
         {
             propGridSignal.SelectedObject = pNode.nNode;
         }
-
         private void btn_OK_Click(object sender, EventArgs e)
         {
             this.Close();

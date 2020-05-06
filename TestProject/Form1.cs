@@ -32,16 +32,28 @@ namespace TestProject
             treeView_lib.DragDrop += new DragEventHandler(treeView_DragDrop);
             treeView_lib.NodeMouseClick += new TreeNodeMouseClickEventHandler(treeView_MouseDown);
             treeView_lib.KeyDown += new KeyEventHandler(treeview_Shift);
+
+            //INIT for sig_treeview
+            treeView_sig.ItemDrag += new ItemDragEventHandler(treeView_ItemDrag);
+            treeView_sig.DragEnter += new DragEventHandler(treeView_DragEnter);
+            treeView_sig.DragOver += new DragEventHandler(treeView_DragOver);
+            treeView_sig.DragDrop += new DragEventHandler(treeView_DragDrop);
+            treeView_sig.KeyDown += new KeyEventHandler(treeview_Shift);
         }
         //----------------MAIN-----------------------------------------------------------------------------------------------------------------------------------------------
         private void Form1_Load(object sender, EventArgs e)
         {
             CreateFromXML("proj.xml", treeView_proj);
             CreateFromXML("lib.xml", treeView_lib);
+            // CreateFromXML("proj.xml", treeView_sig);
+            MyTreeNode treeRoot = (MyTreeNode)treeView_proj.Nodes[0];
+            Node root = treeRoot.nNode;
+            PopulateSigTree(root);
+
             Device d = new Device("testDevice");
             Signal s = new Signal("testSignal", "testType");
             d.Signals.Add(s);
-            Console.WriteLine(s.IO);   
+           // Console.WriteLine(s.IO);
         }
         public void PopulateTree(MyTreeNode MyTreeRoot, TreeView treeView)
         {
@@ -49,8 +61,33 @@ namespace TestProject
             treeView.Nodes.Clear();
             treeView.Nodes.Add(MyTreeRoot);
             MyTreeRoot.getTreeNodes();
+            
         }
-
+       
+        public void PopulateSigTree(Node myRoot)
+        {
+           foreach(Node n in myRoot.Nodes)
+           {
+                PopulateSigTree(n);
+                if(n.GetClass() == "Device")
+                {
+                    Device d = (Device)n;
+                    MyTreeNode tDev = new MyTreeNode(d);
+                    foreach (Signal s in d.Signals)
+                    {
+                        if (s.ConnectedSignal == null)
+                        {
+                            MyTreeNode tSig = new MyTreeNode(s);
+                            tSig.Text = tSig.nNode.sNode;
+                            tDev.Nodes.Add(tSig);
+                        }
+                    }
+                    tDev.Text = tDev.nNode.sNode;
+                    treeView_sig.Nodes.Add(tDev);
+                }
+           }
+        }
+        
         public void treeView_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button != MouseButtons.Right) return;
@@ -146,40 +183,40 @@ namespace TestProject
                         targetNode.Nodes.Add(cNode);
                     }
                     else
-                    {
-                        //Remove and Add node in Data
-                        MyTreeNode parentNode = (MyTreeNode)draggedNode.Parent;
-                        // MyTreeNode cloneNode = (MyTreeNode)draggedNode.Clone();
-                        if (parentNode == null) return;
-                        parentNode.nNode.RemoveNode(draggedNode.nNode);
-                        targetNode.nNode.AddNode(draggedNode.nNode);
-
-                        //Remove and Add node in the tree
-                        //Always do this after manipulating the data, otherwise the parentNode is not accurate                    
-                        draggedNode.Remove();
+                    {  
                         if(targetNode.nNode.GetClass() == "Signal" && draggedNode.nNode.GetClass() == "Signal")
                         {
                             Signal sTarget = (Signal)targetNode.nNode;
                             Signal sDragged = (Signal)draggedNode.nNode;
                             sTarget.Connect(sDragged);
                             System.Console.WriteLine("Connected: "+sTarget.ConnectedSignal.sNode + sDragged.ConnectedSignal.sNode);
-                            sTarget.Disconnnect(sDragged);
+                            targetNode.ForeColor = System.Drawing.Color.Green;
+                            draggedNode.ForeColor = System.Drawing.Color.Green;
+
+                            //sTarget.Disconnnect(sDragged);
                             //System.Console.WriteLine("Connected: " + sTarget.ConnectedSignal.sNode + sDragged.ConnectedSignal.sNode);
-
-
                         }
+                         
                         if ((targetNode.nNode.GetClass() == "Device" && draggedNode.nNode.GetClass() != "Signal") || (targetNode.nNode.GetClass() == "Node" && draggedNode.nNode.GetClass() == "Signal") || (targetNode.nNode.GetClass() == "Signal"))
                         {
                             return;
                         }
                         else
                         {
+                            //Remove and Add node in Data
+                            MyTreeNode parentNode = (MyTreeNode)draggedNode.Parent;
+                            // MyTreeNode cloneNode = (MyTreeNode)draggedNode.Clone();
+                            if (parentNode == null) return;
+                            parentNode.nNode.RemoveNode(draggedNode.nNode);
+                            targetNode.nNode.AddNode(draggedNode.nNode);
+                            //Remove and Add node in the tree
+                            //Always do this after manipulating the data, otherwise the parentNode is not accurate
+                            draggedNode.Remove();
                             targetNode.Nodes.Add(draggedNode); //Put dragged node on top (bottom is default)a
                         }
-                        
                     }
                 }
-                // Expand the node at the location 
+                // Expand the node at the location
                 // to show the dropped node.
                 targetNode.Expand();
             }
@@ -377,6 +414,7 @@ namespace TestProject
             nroot.parseXML(root);
             MyTreeNode myTreeRoot = new MyTreeNode(nroot.Nodes[0]);
             PopulateTree(myTreeRoot, treeView);
+           
         }
         private void propertiesToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -390,6 +428,20 @@ namespace TestProject
             //Open new form and give the (new) parent node 
             Form propForm = new PropertyForm(selectedNode, this);
             propForm.Show();
+        }
+
+        private void disconnectSignalsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //set sender as toolstrip item to make properties accessable
+            ToolStripItem button = sender as ToolStripItem;
+            //then ask for the parent and put it in pbutton
+            ContextMenuStrip pbutton = (ContextMenuStrip)button.GetCurrentParent();
+            //then put the parent's tag into treeview
+            TreeView treeView = (TreeView)pbutton.Tag;
+            MyTreeNode selectedNode = (MyTreeNode)treeView.SelectedNode;
+            Signal SelectedSig = (Signal)selectedNode.nNode;
+            SelectedSig.Disconnnect();
+           
         }
     }
   
