@@ -14,12 +14,17 @@ namespace TestProject
 {
     public class Signal : Node
     {
+        public int ID;
         public bool IO { get; set; }
         public string type { get; set; }
         public Signal ConnectedSignal { get; set; }
         [Browsable(false)]
         public override List<Node> Nodes { get; set; }
 
+        public Signal()
+        {
+
+        }
         public Signal(string sNode, string type) : base(sNode)
         {
             this.type = type;
@@ -28,25 +33,27 @@ namespace TestProject
         {
             return;
         }
-        public override string GenerateXML()
+     /*   public override string GenerateXML()
         {
             string conSig;
             if(this.ConnectedSignal != null)
             {
-                 conSig = this.ConnectedSignal.sNode;
+                 conSig = Convert.ToString(this.ConnectedSignal.ID);
             }
             else
             {
                  conSig = "";
             }
             string result;
-            result = "<Signal name='" + this.sNode + "' IO='" + this.IO + "' type='" + this.type + "' ConnectedSig='" + conSig + "'>\n</Signal>\n";
+            result = "<Signal ID='" + this.ID + "' name='" + this.sNode + "' IO='" + this.IO + "' type='" + this.type + "' ConnectedSig='" + conSig + "'>\n</Signal>\n";
             return result;
-        }
+        }*/
         public void Connect(Signal s)
         {
+            if (this.ID == s.ID) return;
             this.ConnectedSignal = s;
-        
+            //Connect the signal and then make sure the one it's connected to also connects to this one
+            //It will always go both ways (same for disconnect)
             if(s.ConnectedSignal != this)
             {
                 s.Connect(this);

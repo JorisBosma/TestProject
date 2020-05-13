@@ -8,22 +8,30 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
-
+using System.Xml.Serialization;
 
 namespace TestProject
 {
     public class Node
     {
-        public Node searchRet;
+        
+      //  public Node searchRet;
         public virtual List<Node> Nodes { get; set; }
         [DisplayName("Name")]
         public string sNode { get; set; }
 
+        public Node()
+        {
+              
+        }
         public Node(string label)
         {
             this.Nodes = new List<Node>();
             this.sNode = label;
+
         }
+        
+
         public virtual void AddNode(Node n)
         {
             if (n.GetClass() == "Signal") return;
@@ -43,7 +51,7 @@ namespace TestProject
         {
             return "Node";
         }
-        public virtual string GenerateXML()
+  /*      public virtual string GenerateXML()
         {
             String result;
             result = "<Node name='" + this.sNode + "'>\n";
@@ -53,7 +61,7 @@ namespace TestProject
             }
             result = result + "</Node>\n";
             return result;
-        }
+        }*/
         public virtual bool containsNode(string s)
         {
             if (this.sNode.ToLower().Contains(s.ToLower()))
@@ -62,7 +70,7 @@ namespace TestProject
             }
             return false;
         }
-        public virtual void parseXML(XmlElement e)
+    /*    public virtual void parseXML(XmlElement e)
         {
             XmlElement t = null;
             if (e.Name == "Node")
@@ -135,6 +143,6 @@ namespace TestProject
                     this.parseXML(t);
                 }
             }
-        }
+        }*/
     }
 }

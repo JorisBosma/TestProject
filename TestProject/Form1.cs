@@ -4,16 +4,21 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
+using System.Xml.Serialization;
+using System.IO;
+
 
 
 namespace TestProject
 {
     public partial class Form1 : Form
     {
+        
         // public event System.Windows.Forms.ItemDragEventHandler ItemDrag;
         public Form1()
         {
@@ -39,10 +44,13 @@ namespace TestProject
             treeView_sig.DragOver += new DragEventHandler(treeView_DragOver);
             treeView_sig.DragDrop += new DragEventHandler(treeView_DragDrop);
             treeView_sig.KeyDown += new KeyEventHandler(treeview_Shift);
+
+            
         }
         //----------------MAIN-----------------------------------------------------------------------------------------------------------------------------------------------
         private void Form1_Load(object sender, EventArgs e)
         {
+            
             CreateFromXML("proj.xml", treeView_proj);
             CreateFromXML("lib.xml", treeView_lib);
             // CreateFromXML("proj.xml", treeView_sig);
@@ -53,7 +61,17 @@ namespace TestProject
             Device d = new Device("testDevice");
             Signal s = new Signal("testSignal", "testType");
             d.Signals.Add(s);
-           // Console.WriteLine(s.IO);
+
+            //SERIALIZER
+            XmlRootAttribute xRoot = new XmlRootAttribute();
+            XmlSerializer xs = new XmlSerializer(typeof(Node), null, new Type[] { typeof(Device), typeof(Signal)}, xRoot, xRoot.Namespace);
+            const string path = @"C:\Users\Joris.Bosma.KG\source\repos\TestProject\TestProject\bin\Debug\Serializing.xml";
+            TextWriter txtWriter = new StreamWriter(path);
+
+            xs.Serialize(txtWriter, root);
+
+            txtWriter.Close();
+            // Console.WriteLine(s.IO);
         }
         public void PopulateTree(MyTreeNode MyTreeRoot, TreeView treeView)
         {
@@ -61,11 +79,11 @@ namespace TestProject
             treeView.Nodes.Clear();
             treeView.Nodes.Add(MyTreeRoot);
             MyTreeRoot.getTreeNodes();
-            
         }
        
         public void PopulateSigTree(Node myRoot)
         {
+            
            foreach(Node n in myRoot.Nodes)
            {
                 PopulateSigTree(n);
@@ -180,7 +198,7 @@ namespace TestProject
                         cNode.Text = draggedNode.nNode.sNode;
                         cNode.getTreeNodes();
                         targetNode.nNode.AddNode(cNode.nNode);
-                        targetNode.Nodes.Add(cNode);
+                        targetNode.Nodes.Add(cNode);                        
                     }
                     else
                     {  
@@ -189,10 +207,14 @@ namespace TestProject
                             Signal sTarget = (Signal)targetNode.nNode;
                             Signal sDragged = (Signal)draggedNode.nNode;
                             sTarget.Connect(sDragged);
-                            System.Console.WriteLine("Connected: "+sTarget.ConnectedSignal.sNode + sDragged.ConnectedSignal.sNode);
+                            //System.Console.WriteLine("Connected: "+sTarget.ConnectedSignal.sNode + sDragged.ConnectedSignal.sNode);
                             targetNode.ForeColor = System.Drawing.Color.Green;
                             draggedNode.ForeColor = System.Drawing.Color.Green;
-
+                            //refresh tree
+                            MyTreeNode treeRoot = (MyTreeNode)treeView_proj.Nodes[0];
+                            Node root = treeRoot.nNode;
+                            treeView_sig.Nodes.Clear();
+                            PopulateSigTree(root);
                             //sTarget.Disconnnect(sDragged);
                             //System.Console.WriteLine("Connected: " + sTarget.ConnectedSignal.sNode + sDragged.ConnectedSignal.sNode);
                         }
@@ -212,7 +234,7 @@ namespace TestProject
                             //Remove and Add node in the tree
                             //Always do this after manipulating the data, otherwise the parentNode is not accurate
                             draggedNode.Remove();
-                            targetNode.Nodes.Add(draggedNode); //Put dragged node on top (bottom is default)a
+                            targetNode.Nodes.Add(draggedNode); //Put dragged node on top (bottom is default)
                         }
                     }
                 }
@@ -300,7 +322,7 @@ namespace TestProject
         {
             MyTreeNode root = (MyTreeNode)treeView_proj.Nodes[0];
 
-            //start writing all nodes to overarching element
+            /*start writing all nodes to overarching element
             string rs = "<?xml version='1.0' encoding='UTF-8'?>\n<XML>\n<project projectnr='123456789'></project>\n<LastEdit Editor='" + Environment.UserName + "'></LastEdit>\n";
             rs = rs + root.nNode.GenerateXML() + "</XML>";
             //Console.WriteLine(rs);
@@ -325,6 +347,7 @@ namespace TestProject
             HTMLwriter ht = new HTMLwriter();
             ht.ConvertXmlToHtmlTable(rs);
             System.IO.File.WriteAllText(File, rs);
+            */
         }
         private void openProjectToolStripMenuItem1_Click(object sender, EventArgs e)
         {
@@ -354,7 +377,7 @@ namespace TestProject
         private void saveLibraryToolStripMenuItem_Click(object sender, EventArgs e)
         {
             MyTreeNode root = (MyTreeNode)treeView_lib.Nodes[0];
-            //start writing all nodes to overarching element
+            /*start writing all nodes to overarching element
             string rs = "<?xml version='1.0' encoding='UTF-8'?>\n<XML>\n<LastEdit Editor='" + Environment.UserName + "'></LastEdit>\n";
             rs = rs + root.nNode.GenerateXML() + "</XML>";
             //Console.WriteLine(rs);
@@ -377,6 +400,7 @@ namespace TestProject
                 File = saveFileDialog.FileName;
             }
             System.IO.File.WriteAllText(File, rs);
+            */
         }
         private void openLibraryToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -406,15 +430,14 @@ namespace TestProject
 
         public void CreateFromXML(string File, TreeView treeView)
         {
-            string rs = System.IO.File.ReadAllText(File);
+           /* string rs = System.IO.File.ReadAllText(File);
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(rs);
             XmlElement root = doc.DocumentElement;
             Node nroot = new Node("TempTreeRoot");
             nroot.parseXML(root);
             MyTreeNode myTreeRoot = new MyTreeNode(nroot.Nodes[0]);
-            PopulateTree(myTreeRoot, treeView);
-           
+            PopulateTree(myTreeRoot, treeView);*/
         }
         private void propertiesToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -441,11 +464,12 @@ namespace TestProject
             MyTreeNode selectedNode = (MyTreeNode)treeView.SelectedNode;
             Signal SelectedSig = (Signal)selectedNode.nNode;
             SelectedSig.Disconnnect();
-           
+            MyTreeNode treeRoot = (MyTreeNode)treeView_proj.Nodes[0];
+            Node root = treeRoot.nNode;
+            treeView_sig.Nodes.Clear();
+            PopulateSigTree(root);
+
         }
-    }
-  
-    
-    
+    } 
 }
     

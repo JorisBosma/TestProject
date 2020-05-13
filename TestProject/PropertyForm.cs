@@ -29,7 +29,7 @@ namespace TestProject
         }
         private void btn_OK_Click(object sender, EventArgs e)
         {
-            this.Close();
+           /* this.Close();
             MyTreeNode root = (MyTreeNode)form1.treeView_lib.Nodes[0];
             string rs = "<?xml version='1.0' encoding='UTF-8'?>\n<XML>\n<LastEdit Editor='" + Environment.UserName + "'></LastEdit>\n";
             rs = rs + root.nNode.GenerateXML() + "</XML>";
@@ -42,7 +42,7 @@ namespace TestProject
             System.IO.File.WriteAllText("temp.xml", rs);
             form1.CreateFromXML("temp.xml", form1.treeView_proj);
 
-            System.IO.File.Delete("temp.xml");
+            System.IO.File.Delete("temp.xml");*/
         }
     }
 }

@@ -22,6 +22,10 @@ namespace TestProject
         [Browsable(false)]
         public override List<Node> Nodes { get; set; }
 
+        public Device()
+        {
+
+        }
         public Device(string sNode) : base(sNode)
         {
             this.Signals = new List<Signal>();
@@ -36,7 +40,7 @@ namespace TestProject
             if (s.GetClass() != "Signal") return;
             Signals.Remove((Signal)s);
         }
-        public override string GenerateXML()
+       /* public override string GenerateXML()
         {
             String result;
             result = "<Device name='" + this.sNode + "' merk='" + this.Merk + "' soort='" + this.Soort + "' omschrijving='" + this.Omschrijving + "' type='" + this.Type + "'>\n";
@@ -50,7 +54,7 @@ namespace TestProject
             }
             result = result + "</Device>\n";
             return result;
-        }
+        }*/
         public override string GetClass()
         {
             return "Device";
@@ -63,17 +67,22 @@ namespace TestProject
             }
             return false;
         }
-        public override void parseXML(XmlElement e)
+     /*   public override void parseXML(XmlElement e)
         {
             XmlElement t = null;
             if (e.Name == "Signal")
             {
+                int i = 0;
                 bool b = bool.Parse(e.GetAttribute("IO"));
                 string type = e.GetAttribute("type");
                 string s = e.GetAttribute("name");
+                string num = e.GetAttribute("ID");
                 Signal newNode = new Signal(s, type);
-                
+                if(num != "")  i = Int32.Parse(num);
 
+                // int i = Convert.ToInt32(num);
+                newNode.ID = i;
+                
                 newNode.IO = b;
                 newNode.type = type;
                 
@@ -90,6 +99,6 @@ namespace TestProject
                     this.parseXML(t);
                 }
             }
-        }
+        }*/
     }
 }
