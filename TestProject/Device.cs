@@ -14,11 +14,12 @@ namespace TestProject
     public class Device : Node
     {
         public List<Signal> Signals { get; set; }
+        public List<Connection> connections { get; set; }
         public string Merk { get; set; }
         public string Soort { get; set; }
         public string Omschrijving { get; set; }                 //Omschrijving
         public string Type { get; set; }                         //STC100, STP100-50, Magna3 etc.
-        public string ToConnnect;
+        
         [Browsable(false)]
         public override List<Node> Nodes { get; set; }
 
@@ -29,32 +30,51 @@ namespace TestProject
         public Device(string sNode) : base(sNode)
         {
             this.Signals = new List<Signal>();
+            this.connections = new List<Connection>();
+            this.BuildConnections();
+            this.BuildConnectionsInSig();
         }
         public override void AddNode(Node s)
         {
             if (s.GetClass() != "Signal") return;                //Only signals can be added to a device (This is only in the data)
             Signals.Add((Signal)s);
         }
+        public void BuildConnections()
+        {
+            this.connections.Clear();
+            foreach(Signal s in this.Signals)
+            {
+                if (s.ConnectedSignal == null) ;
+                else
+                {
+                    Connection c = new Connection(s, s.ConnectedSignal);
+                    this.connections.Add(c);
+                }
+            }
+        }
+        public void BuildConnectionsInSig()
+        {
+            foreach(Connection c in connections)
+            {
+                foreach(Signal s in Signals)
+                {
+                    if(s == c.s1 )
+                    {
+                        s.Connect(c.s1);
+                    }
+                    else if (s== c.s2)
+                    {
+                        s.Connect(c.s2);
+                    }
+                }
+            }
+        }
         public override void RemoveNode(Node s)
         {
             if (s.GetClass() != "Signal") return;
             Signals.Remove((Signal)s);
         }
-       /* public override string GenerateXML()
-        {
-            String result;
-            result = "<Device name='" + this.sNode + "' merk='" + this.Merk + "' soort='" + this.Soort + "' omschrijving='" + this.Omschrijving + "' type='" + this.Type + "'>\n";
-            foreach (Node n in this.Nodes)
-            {
-                result = result + n.GenerateXML();
-            }
-            foreach (Signal s in this.Signals)
-            {
-                result = result + s.GenerateXML();
-            }
-            result = result + "</Device>\n";
-            return result;
-        }*/
+       
         public override string GetClass()
         {
             return "Device";
@@ -67,38 +87,7 @@ namespace TestProject
             }
             return false;
         }
-     /*   public override void parseXML(XmlElement e)
-        {
-            XmlElement t = null;
-            if (e.Name == "Signal")
-            {
-                int i = 0;
-                bool b = bool.Parse(e.GetAttribute("IO"));
-                string type = e.GetAttribute("type");
-                string s = e.GetAttribute("name");
-                string num = e.GetAttribute("ID");
-                Signal newNode = new Signal(s, type);
-                if(num != "")  i = Int32.Parse(num);
 
-                // int i = Convert.ToInt32(num);
-                newNode.ID = i;
-                
-                newNode.IO = b;
-                newNode.type = type;
-                
-                this.Signals.Add(newNode);
-
-                if (e.HasChildNodes == true)
-                {
-                    t = (XmlElement)e.ChildNodes[0];
-                    newNode.parseXML(t);
-                }
-                t = (XmlElement)e.NextSibling;
-                if (t != null) 
-                {
-                    this.parseXML(t);
-                }
-            }
-        }*/
+      
     }
 }

@@ -54,24 +54,32 @@ namespace TestProject
             CreateFromXML("proj.xml", treeView_proj);
             CreateFromXML("lib.xml", treeView_lib);
             // CreateFromXML("proj.xml", treeView_sig);
+            MyTreeNode libTreeRoot = (MyTreeNode)treeView_lib.Nodes[0];
+            Node libRoot = libTreeRoot.nNode;
             MyTreeNode treeRoot = (MyTreeNode)treeView_proj.Nodes[0];
             Node root = treeRoot.nNode;
             PopulateSigTree(root);
 
-            Device d = new Device("testDevice");
-            Signal s = new Signal("testSignal", "testType");
-            d.Signals.Add(s);
+            
 
             //SERIALIZER
-            XmlRootAttribute xRoot = new XmlRootAttribute();
+            /*XmlRootAttribute xRoot = new XmlRootAttribute();
             XmlSerializer xs = new XmlSerializer(typeof(Node), null, new Type[] { typeof(Device), typeof(Signal)}, xRoot, xRoot.Namespace);
             const string path = @"C:\Users\Joris.Bosma.KG\source\repos\TestProject\TestProject\bin\Debug\Serializing.xml";
             TextWriter txtWriter = new StreamWriter(path);
 
-            xs.Serialize(txtWriter, root);
+            xs.Serialize(txtWriter, libRoot);
 
             txtWriter.Close();
             // Console.WriteLine(s.IO);
+
+            //DESERIALIZER
+            //XmlRootAttribute xRoot = new XmlRootAttribute();
+            XmlSerializer xs2 = new XmlSerializer(typeof(Node), null, new Type[] { typeof(Device), typeof(Signal) }, xRoot, xRoot.Namespace);
+            Node root2;
+            using (Stream reader = new FileStream("Serializing.xml", FileMode.Open))
+                root2 = (Node)xs2.Deserialize(reader);
+            Console.WriteLine(root2.sNode);*/
         }
         public void PopulateTree(MyTreeNode MyTreeRoot, TreeView treeView)
         {
@@ -102,7 +110,9 @@ namespace TestProject
                     }
                     tDev.Text = tDev.nNode.sNode;
                     treeView_sig.Nodes.Add(tDev);
+                    
                 }
+
            }
         }
         
@@ -207,6 +217,10 @@ namespace TestProject
                             Signal sTarget = (Signal)targetNode.nNode;
                             Signal sDragged = (Signal)draggedNode.nNode;
                             sTarget.Connect(sDragged);
+
+                            MyTreeNode t = (MyTreeNode)targetNode.Parent;
+                            Device parentD = (Device)t.nNode;
+                            parentD.BuildConnections();
                             //System.Console.WriteLine("Connected: "+sTarget.ConnectedSignal.sNode + sDragged.ConnectedSignal.sNode);
                             targetNode.ForeColor = System.Drawing.Color.Green;
                             draggedNode.ForeColor = System.Drawing.Color.Green;
@@ -318,15 +332,9 @@ namespace TestProject
             }
         }
 
-        private void saveProjectToolStripMenuItem_Click(object sender, EventArgs e) //ALSO WRITES HTML TABLE
-        {
-            MyTreeNode root = (MyTreeNode)treeView_proj.Nodes[0];
-
-            /*start writing all nodes to overarching element
-            string rs = "<?xml version='1.0' encoding='UTF-8'?>\n<XML>\n<project projectnr='123456789'></project>\n<LastEdit Editor='" + Environment.UserName + "'></LastEdit>\n";
-            rs = rs + root.nNode.GenerateXML() + "</XML>";
-            //Console.WriteLine(rs);
-            string File = "Test.xml";
+        private void saveProjectToolStripMenuItem_Click(object sender, EventArgs e) 
+        {  
+            string Path = "Test.xml";
             SaveFileDialog saveFileDialog = new SaveFileDialog
             {
                 InitialDirectory = @"C:\Users\Joris.Bosma.KG\source\repos\TestProject\TestProject\bin\Debug",
@@ -342,12 +350,19 @@ namespace TestProject
             };
             if (saveFileDialog.ShowDialog() == DialogResult.OK)
             {
-                File = saveFileDialog.FileName;
+                Path = saveFileDialog.FileName;
             }
             HTMLwriter ht = new HTMLwriter();
-            ht.ConvertXmlToHtmlTable(rs);
-            System.IO.File.WriteAllText(File, rs);
-            */
+            
+            MyTreeNode treeRoot = (MyTreeNode)treeView_proj.Nodes[0];
+            Node root = treeRoot.nNode;
+            XmlRootAttribute xRoot = new XmlRootAttribute();
+            XmlSerializer xs = new XmlSerializer(typeof(Node), null, new Type[] { typeof(Device), typeof(Signal) }, xRoot, xRoot.Namespace);
+            TextWriter txtWriter = new StreamWriter(Path);
+
+            xs.Serialize(txtWriter, root);
+
+            txtWriter.Close();
         }
         private void openProjectToolStripMenuItem1_Click(object sender, EventArgs e)
         {
@@ -376,12 +391,7 @@ namespace TestProject
         }
         private void saveLibraryToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MyTreeNode root = (MyTreeNode)treeView_lib.Nodes[0];
-            /*start writing all nodes to overarching element
-            string rs = "<?xml version='1.0' encoding='UTF-8'?>\n<XML>\n<LastEdit Editor='" + Environment.UserName + "'></LastEdit>\n";
-            rs = rs + root.nNode.GenerateXML() + "</XML>";
-            //Console.WriteLine(rs);
-            string File = "Test.xml";
+            string Path = "Test.xml";
             SaveFileDialog saveFileDialog = new SaveFileDialog
             {
                 InitialDirectory = @"C:\Users\Joris.Bosma.KG\source\repos\TestProject\TestProject\bin\Debug",
@@ -397,10 +407,20 @@ namespace TestProject
             };
             if (saveFileDialog.ShowDialog() == DialogResult.OK)
             {
-                File = saveFileDialog.FileName;
+                Path = saveFileDialog.FileName;
             }
-            System.IO.File.WriteAllText(File, rs);
-            */
+            HTMLwriter ht = new HTMLwriter();
+
+            MyTreeNode treeRoot = (MyTreeNode)treeView_lib.Nodes[0];
+            Node root = treeRoot.nNode;
+            XmlRootAttribute xRoot = new XmlRootAttribute();
+            XmlSerializer xs = new XmlSerializer(typeof(Node), null, new Type[] { typeof(Device), typeof(Signal) }, xRoot, xRoot.Namespace);
+            TextWriter txtWriter = new StreamWriter(Path);
+
+            xs.Serialize(txtWriter, root);
+
+            txtWriter.Close();
+
         }
         private void openLibraryToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -430,14 +450,15 @@ namespace TestProject
 
         public void CreateFromXML(string File, TreeView treeView)
         {
-           /* string rs = System.IO.File.ReadAllText(File);
-            XmlDocument doc = new XmlDocument();
-            doc.LoadXml(rs);
-            XmlElement root = doc.DocumentElement;
-            Node nroot = new Node("TempTreeRoot");
-            nroot.parseXML(root);
-            MyTreeNode myTreeRoot = new MyTreeNode(nroot.Nodes[0]);
-            PopulateTree(myTreeRoot, treeView);*/
+            //DESERIALIZER
+            XmlRootAttribute xRoot = new XmlRootAttribute();
+            XmlSerializer xs2 = new XmlSerializer(typeof(Node), null, new Type[] { typeof(Device), typeof(Signal), typeof(Connection) }, xRoot, xRoot.Namespace);
+            Node root;
+            using (Stream reader = new FileStream(File, FileMode.Open))
+                root = (Node)xs2.Deserialize(reader);
+            Console.WriteLine(root.sNode);
+            MyTreeNode myTreeRoot = new MyTreeNode(root);
+            PopulateTree(myTreeRoot, treeView);
         }
         private void propertiesToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -469,6 +490,26 @@ namespace TestProject
             treeView_sig.Nodes.Clear();
             PopulateSigTree(root);
 
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            MyTreeNode t = (MyTreeNode)treeView_proj.Nodes[0];
+            ConnectSignals(t.nNode);
+        }
+        private void ConnectSignals(Node myRoot)
+        {
+            foreach (Node n in myRoot.Nodes)
+            {
+                ConnectSignals(n);
+                if (n.GetClass() == "Device")
+                {
+                    Device d = (Device)n;
+                    d.BuildConnectionsInSig();
+
+                }
+
+            }
         }
     } 
 }

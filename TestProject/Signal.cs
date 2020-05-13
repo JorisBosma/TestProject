@@ -8,15 +8,16 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
+using System.Xml.Serialization;
 
 
 namespace TestProject
 {
     public class Signal : Node
     {
-        public int ID;
         public bool IO { get; set; }
         public string type { get; set; }
+        [XmlIgnore]
         public Signal ConnectedSignal { get; set; }
         [Browsable(false)]
         public override List<Node> Nodes { get; set; }
@@ -33,25 +34,11 @@ namespace TestProject
         {
             return;
         }
-     /*   public override string GenerateXML()
-        {
-            string conSig;
-            if(this.ConnectedSignal != null)
-            {
-                 conSig = Convert.ToString(this.ConnectedSignal.ID);
-            }
-            else
-            {
-                 conSig = "";
-            }
-            string result;
-            result = "<Signal ID='" + this.ID + "' name='" + this.sNode + "' IO='" + this.IO + "' type='" + this.type + "' ConnectedSig='" + conSig + "'>\n</Signal>\n";
-            return result;
-        }*/
         public void Connect(Signal s)
         {
-            if (this.ID == s.ID) return;
+            if (this == s) return;
             this.ConnectedSignal = s;
+            
             //Connect the signal and then make sure the one it's connected to also connects to this one
             //It will always go both ways (same for disconnect)
             if(s.ConnectedSignal != this)
@@ -68,8 +55,6 @@ namespace TestProject
                 s.Disconnnect();
             }
         }
-       
-        
         public override bool containsNode(string s)
         {
             if (this.sNode.ToLower().Contains(s.ToLower()))
