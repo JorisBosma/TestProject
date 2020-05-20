@@ -54,6 +54,7 @@
             // treeView_proj
             // 
             this.treeView_proj.AllowDrop = true;
+            this.treeView_proj.ImeMode = System.Windows.Forms.ImeMode.Off;
             this.treeView_proj.Location = new System.Drawing.Point(42, 92);
             this.treeView_proj.Name = "treeView_proj";
             this.treeView_proj.Size = new System.Drawing.Size(262, 405);

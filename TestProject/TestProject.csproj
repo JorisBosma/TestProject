@@ -62,7 +62,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Connection.cs" />
     <Compile Include="Device.cs" />
     <Compile Include="HTMLwriter.cs" />
     <Compile Include="MyTreeNode.cs" />
