@@ -9,17 +9,22 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Serialization;
+using System.Collections;
+using System.Runtime.CompilerServices;
+using System.Runtime.Serialization;
 
 namespace TestProject
 {
+    [Serializable]
+    [DataContract(Name = "Node", Namespace = "TestProject", IsReference = true)]
     public class Node
     {
-        
-      //  public Node searchRet;
+        //  public Node searchRet;
+        [DataMember]
         public virtual List<Node> Nodes { get; set; }
         [DisplayName("Name")]
+        [DataMember]
         public string sNode { get; set; }
-
         public Node()
         {
               
@@ -30,8 +35,6 @@ namespace TestProject
             this.sNode = label;
 
         }
-        
-
         public virtual void AddNode(Node n)
         {
             if (n.GetClass() == "Signal") return;
@@ -51,7 +54,6 @@ namespace TestProject
         {
             return "Node";
         }
-       
         public virtual bool containsNode(string s)
         {
             if (this.sNode.ToLower().Contains(s.ToLower()))

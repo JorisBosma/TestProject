@@ -9,15 +9,22 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Serialization;
+using System.Collections;
+using System.Runtime.CompilerServices;
+using System.Runtime.Serialization;
 
 
 namespace TestProject
 {
+    [Serializable]
+    [DataContract(Name = "Signal", Namespace = "TestProject", IsReference = true)]
     public class Signal : Node
     {
+        [DataMember]
         public bool IO { get; set; }
+        [DataMember]
         public string type { get; set; }
-        [XmlIgnore]
+        [DataMember]
         public Signal ConnectedSignal { get; set; }
         [Browsable(false)]
         public override List<Node> Nodes { get; set; }

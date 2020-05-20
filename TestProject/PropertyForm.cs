@@ -3,10 +3,17 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml;
+using System.Xml.Serialization;
+using System.Collections;
+using System.Runtime.CompilerServices;
+using System.Runtime.Serialization;
 
 namespace TestProject
 {                      
@@ -29,20 +36,32 @@ namespace TestProject
         }
         private void btn_OK_Click(object sender, EventArgs e)
         {
-           /* this.Close();
-            MyTreeNode root = (MyTreeNode)form1.treeView_lib.Nodes[0];
-            string rs = "<?xml version='1.0' encoding='UTF-8'?>\n<XML>\n<LastEdit Editor='" + Environment.UserName + "'></LastEdit>\n";
-            rs = rs + root.nNode.GenerateXML() + "</XML>";
-            System.IO.File.WriteAllText("temp.xml", rs);
-            form1.CreateFromXML("temp.xml", form1.treeView_lib);
+            this.Close();
+            //RELOAD LIB TREEVIEW
+            MyTreeNode Treeroot = (MyTreeNode)form1.treeView_lib.Nodes[0];
+            Node root = Treeroot.nNode;
+            DataContractSerializer xs = new DataContractSerializer(typeof(Node), "Node", "Building", new Type[] { typeof(Device), typeof(Signal) });
+            FileStream txtWriter = new FileStream("temp.xml", FileMode.Create);
 
-            root = (MyTreeNode)form1.treeView_proj.Nodes[0];
-            rs = "<?xml version='1.0' encoding='UTF-8'?>\n<XML>\n<project projectnr='123546879'></project>\n<LastEdit Editor='" + Environment.UserName + "'></LastEdit>\n";
-            rs = rs + root.nNode.GenerateXML() + "</XML>";
-            System.IO.File.WriteAllText("temp.xml", rs);
+            xs.WriteObject(txtWriter, root);
+
+            txtWriter.Close();
+
+            form1.CreateFromXML("temp.xml", form1.treeView_lib);
+            System.IO.File.Delete("temp.xml");
+
+            //RELOAD PROJ TREEVIEW
+            Treeroot = (MyTreeNode)form1.treeView_proj.Nodes[0];
+            root = Treeroot.nNode;
+            DataContractSerializer xs2 = new DataContractSerializer(typeof(Node), "Node", "Building", new Type[] { typeof(Device), typeof(Signal) });
+            FileStream txtWriter2 = new FileStream("temp.xml", FileMode.Create);
+
+            xs2.WriteObject(txtWriter2, root);
+
+            txtWriter2.Close();
             form1.CreateFromXML("temp.xml", form1.treeView_proj);
 
-            System.IO.File.Delete("temp.xml");*/
+            System.IO.File.Delete("temp.xml"); 
         }
     }
 }
