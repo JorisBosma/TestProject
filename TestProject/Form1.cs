@@ -87,6 +87,7 @@ namespace TestProject
                         {
                             MyTreeNode tSig = new MyTreeNode(s);
                             tSig.Text = tSig.nNode.sNode;
+                            tSig.ForeColor = System.Drawing.Color.Red;
                             tDev.Nodes.Add(tSig);
                         }
                     }
