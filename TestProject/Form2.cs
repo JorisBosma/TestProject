@@ -3,11 +3,17 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-
+using System.Xml;
+using System.Xml.Serialization;
+using System.Collections;
+using System.Runtime.CompilerServices;
+using System.Runtime.Serialization;
 namespace TestProject
 {
     public partial class Form2 : Form
@@ -44,8 +50,7 @@ namespace TestProject
             else
             {
                 pNode.Nodes.Add(newTreeNode);
-            }
-            
+            } 
             pNode.Expand();
         }
         private void btnClose_Click(object sender, EventArgs e)
@@ -56,12 +61,60 @@ namespace TestProject
         {
             lblParent.Text = pNode.nNode.sNode;
             cboxType.Hide();
+            Form1 f1 = new Form1();
+            f1.CreateFromXML("lib.xml", treeView_lib_f2);
         }
         private void radioButton2_CheckedChanged(object sender, EventArgs e)
         {
             if(radioButton2.Checked == true)
             {
                 cboxType.Show();
+            }
+        }
+
+        private void treeView_lib_f2_DoubleClick(object sender, EventArgs e)
+        {
+            TreeView treeView = sender as TreeView;
+            MyTreeNode selected_Node = (MyTreeNode)treeView.SelectedNode;
+            lbl_list.Text = lbl_list.Text + "\n" + selected_Node.nNode.sNode;
+            MyTreeNode newNode = new MyTreeNode(selected_Node.nNode);
+            newNode.Text = newNode.nNode.sNode;
+            pNode.Nodes.Add(newNode);
+            pNode.nNode.AddNode(newNode.nNode);
+            
+        }
+
+        private MyTreeNode SearchNode(string SearchText, MyTreeNode StartNode)
+        {
+            MyTreeNode treeNode = null;
+            while (StartNode != null)
+            {
+                if (StartNode.nNode.containsNode(SearchText))
+                {
+                    treeNode = StartNode;
+                    break;
+                };
+                if (StartNode.Nodes.Count != 0)
+                {
+                    treeNode = SearchNode(SearchText, (MyTreeNode)StartNode.Nodes[0]);//Recursive Search
+                    if (treeNode != null) break;
+                }
+                StartNode = (MyTreeNode)StartNode.NextNode;
+            }
+            return treeNode;
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            string search = txtFilter_f2.Text;
+            if (search.Count() < 3) return;
+            MyTreeNode startNode = (MyTreeNode)treeView_lib_f2.Nodes[0];
+
+            MyTreeNode SelectedNode = SearchNode(search, startNode);
+            if (SelectedNode != null)
+            {
+                treeView_lib_f2.SelectedNode = SelectedNode;
+                this.treeView_lib_f2.Select();
             }
         }
     }
