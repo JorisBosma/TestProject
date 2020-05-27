@@ -1,19 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using System.Xml;
-using System.Xml.Serialization;
-using System.Collections;
-using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
+using System.Windows.Forms;
 
 
 
@@ -33,13 +22,13 @@ namespace TestProject
             treeView_proj.NodeMouseClick += new TreeNodeMouseClickEventHandler(treeView_MouseDown);
             treeView_proj.KeyDown += new KeyEventHandler(treeview_Shift);
 
-            //INIT for lib_treeview
+            /*INIT for lib_treeview
             treeView_lib.ItemDrag += new ItemDragEventHandler(treeView_ItemDrag);
             treeView_lib.DragEnter += new DragEventHandler(treeView_DragEnter);
             treeView_lib.DragOver += new DragEventHandler(treeView_DragOver);
             treeView_lib.DragDrop += new DragEventHandler(treeView_DragDrop);
             treeView_lib.NodeMouseClick += new TreeNodeMouseClickEventHandler(treeView_MouseDown);
-            treeView_lib.KeyDown += new KeyEventHandler(treeview_Shift);
+            treeView_lib.KeyDown += new KeyEventHandler(treeview_Shift);*/
 
             //INIT for sig_treeview
             treeView_sig.ItemDrag += new ItemDragEventHandler(treeView_ItemDrag);
@@ -55,10 +44,10 @@ namespace TestProject
         {
 
             CreateFromXML("proj.xml", treeView_proj);
-            CreateFromXML("lib.xml", treeView_lib);
+            //CreateFromXML("lib.xml", treeView_lib);
             // CreateFromXML("proj.xml", treeView_sig);
-            MyTreeNode libTreeRoot = (MyTreeNode)treeView_lib.Nodes[0];
-            Node libRoot = libTreeRoot.nNode;
+            //MyTreeNode libTreeRoot = (MyTreeNode)treeView_lib.Nodes[0];
+            // Node libRoot = libTreeRoot.nNode;
             MyTreeNode treeRoot = (MyTreeNode)treeView_proj.Nodes[0];
             Node root = treeRoot.nNode;
             PopulateSigTree(root);
@@ -133,7 +122,6 @@ namespace TestProject
             //then put the parent's tag into treeview
             TreeView treeView = (TreeView)pbutton.Tag;
             MyTreeNode selectedNode = (MyTreeNode)treeView.SelectedNode;
-
             //Open new form and give the (new) parent node 
             Form form2 = new Form2(selectedNode);
             form2.Show();
@@ -183,7 +171,7 @@ namespace TestProject
                 // location and add it to the node at the drop location.
                 if (e.Effect == DragDropEffects.Move)
                 {
-                    if (draggedNode.TreeView == treeView_lib && targetNode.TreeView == treeView_proj)
+                    if (/*draggedNode.TreeView == treeView_lib && */targetNode.TreeView == treeView_proj && draggedNode.nNode.GetClass() != "Signal" && targetNode.nNode.GetClass() != "Signal")
                     {
                         MyTreeNode cNode = new MyTreeNode(draggedNode.nNode);
                         cNode.Text = draggedNode.nNode.sNode;
@@ -212,7 +200,6 @@ namespace TestProject
                             //sTarget.Disconnnect(sDragged);
                             //System.Console.WriteLine("Connected: " + sTarget.ConnectedSignal.sNode + sDragged.ConnectedSignal.sNode);
                         }
-
                         if ((targetNode.nNode.GetClass() == "Device" && draggedNode.nNode.GetClass() != "Signal") || (targetNode.nNode.GetClass() == "Node" && draggedNode.nNode.GetClass() == "Signal") || (targetNode.nNode.GetClass() == "Signal"))
                         {
                             return;
@@ -274,42 +261,6 @@ namespace TestProject
                 treeView.SelectedNode = cNode;
             }
         }
-        private MyTreeNode SearchNode(string SearchText, MyTreeNode StartNode)
-        {
-            MyTreeNode treeNode = null;
-            while (StartNode != null)
-            {
-                if (StartNode.nNode.containsNode(SearchText))
-                {
-                    treeNode = StartNode;
-                    break;
-                };
-                if (StartNode.Nodes.Count != 0)
-                {
-                    treeNode = SearchNode(SearchText, (MyTreeNode)StartNode.Nodes[0]);//Recursive Search
-                    if (treeNode != null) break;
-                }
-                StartNode = (MyTreeNode)StartNode.NextNode;
-            }
-            return treeNode;
-        }
-        private void txtFilter_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            if (e.KeyChar == (char)13)
-            {
-                string search = txtFilter.Text;
-                if (search.Count() < 3) return;
-                MyTreeNode startNode = (MyTreeNode)treeView_lib.Nodes[0];
-
-                MyTreeNode SelectedNode = SearchNode(search, startNode);
-                if (SelectedNode != null)
-                {
-                    treeView_lib.SelectedNode = SelectedNode;
-                    this.treeView_lib.Select();
-                }
-
-            }
-        }
         private void saveProjectToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string Path = "Test.xml";
@@ -365,61 +316,6 @@ namespace TestProject
             }
             CreateFromXML(File, treeView_proj);
         }
-        private void saveLibraryToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            string Path = "Test.xml";
-            SaveFileDialog saveFileDialog = new SaveFileDialog
-            {
-                InitialDirectory = @"C:\Users\Joris.Bosma.KG\source\repos\TestProject\TestProject\bin\Debug",
-                Title = "Browse XML Files",
-
-                CheckFileExists = true,
-                CheckPathExists = true,
-
-                DefaultExt = "xml",
-                Filter = "xml files (*.xml)|*.xml",
-                FilterIndex = 2,
-                RestoreDirectory = true,
-            };
-            if (saveFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                Path = saveFileDialog.FileName;
-            }
-            MyTreeNode treeRoot = (MyTreeNode)treeView_lib.Nodes[0];
-            Node root = treeRoot.nNode;
-            DataContractSerializer xs = new DataContractSerializer(typeof(Node), "Node", "Building", new Type[] { typeof(Device), typeof(Signal) });
-            FileStream txtWriter = new FileStream(Path, FileMode.Create);
-
-            xs.WriteObject(txtWriter, root);
-
-            txtWriter.Close();
-
-        }
-        private void openLibraryToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            string File = "Test.xml";
-            OpenFileDialog openFileDialog = new OpenFileDialog
-            {
-                InitialDirectory = @"C:\Users\Joris.Bosma.KG\source\repos\TestProject\TestProject\bin\Debug",
-                Title = "Browse XML Files",
-
-                CheckFileExists = true,
-                CheckPathExists = true,
-
-                DefaultExt = "xml",
-                Filter = "xml files (*.xml)|*.xml",
-                FilterIndex = 2,
-                RestoreDirectory = true,
-
-                ReadOnlyChecked = true,
-                ShowReadOnly = true
-            };
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                File = openFileDialog.FileName;
-            }
-            CreateFromXML(File, treeView_lib);
-        }
         public void CreateFromXML(string File, TreeView treeView)
         {
             //DESERIALIZER
@@ -427,21 +323,11 @@ namespace TestProject
             Node root;
             using (Stream reader = new FileStream(File, FileMode.Open))
                 root = (Node)xs2.ReadObject(reader);
-            
+
             Console.WriteLine(root.sNode);
             MyTreeNode myTreeRoot = new MyTreeNode(root);
-            
-            PopulateTree(myTreeRoot, treeView);
 
-           /* 
-             XmlRootAttribute xRoot = new XmlRootAttribute();
-             XmlSerializer xs2 = new XmlSerializer(typeof(Node), null, new Type[] { typeof(Device), typeof(Signal), typeof(Connection) }, xRoot, xRoot.Namespace);
-             Node root;
-             using (Stream reader = new FileStream(File, FileMode.Open))
-                 root = (Node)xs2.Deserialize(reader);
-             Console.WriteLine(root.sNode);
-             MyTreeNode myTreeRoot = new MyTreeNode(root);
-             PopulateTree(myTreeRoot, treeView);*/
+            PopulateTree(myTreeRoot, treeView);
         }
         private void propertiesToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -453,7 +339,7 @@ namespace TestProject
             TreeView treeView = (TreeView)pbutton.Tag;
             MyTreeNode selectedNode = (MyTreeNode)treeView.SelectedNode;
             //Open new form and give the (new) parent node 
-            Form propForm = new PropertyForm(selectedNode, this);
+            Form propForm = new PropertyForm(selectedNode);
             propForm.Show();
         }
         private void disconnectSignalsToolStripMenuItem_Click(object sender, EventArgs e)

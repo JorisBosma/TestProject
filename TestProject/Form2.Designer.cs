@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form2));
             this.lblParent = new System.Windows.Forms.Label();
             this.txtName = new System.Windows.Forms.TextBox();
@@ -43,7 +44,18 @@
             this.lbl_list = new System.Windows.Forms.Label();
             this.txtFilter_f2 = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.libraryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.rightClickMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toevoegenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnVerwijderen = new System.Windows.Forms.ToolStripMenuItem();
+            this.propertiesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.button2 = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
+            this.menuStrip1.SuspendLayout();
+            this.rightClickMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // lblParent
@@ -110,9 +122,11 @@
             resources.ApplyResources(this.treeView_lib_f2, "treeView_lib_f2");
             this.treeView_lib_f2.Name = "treeView_lib_f2";
             this.treeView_lib_f2.DoubleClick += new System.EventHandler(this.treeView_lib_f2_DoubleClick);
+            this.treeView_lib_f2.MouseClick += new System.Windows.Forms.MouseEventHandler(this.treeView_lib_f2_MouseClick);
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.button2);
             this.groupBox1.Controls.Add(this.IO);
             this.groupBox1.Controls.Add(this.cboxType);
             this.groupBox1.Controls.Add(this.radioButton2);
@@ -141,10 +155,71 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
+            // menuStrip1
+            // 
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.libraryToolStripMenuItem});
+            resources.ApplyResources(this.menuStrip1, "menuStrip1");
+            this.menuStrip1.Name = "menuStrip1";
+            // 
+            // libraryToolStripMenuItem
+            // 
+            this.libraryToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.saveToolStripMenuItem,
+            this.saveToolStripMenuItem1});
+            this.libraryToolStripMenuItem.Name = "libraryToolStripMenuItem";
+            resources.ApplyResources(this.libraryToolStripMenuItem, "libraryToolStripMenuItem");
+            // 
+            // saveToolStripMenuItem
+            // 
+            this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
+            resources.ApplyResources(this.saveToolStripMenuItem, "saveToolStripMenuItem");
+            this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
+            // 
+            // saveToolStripMenuItem1
+            // 
+            this.saveToolStripMenuItem1.Name = "saveToolStripMenuItem1";
+            resources.ApplyResources(this.saveToolStripMenuItem1, "saveToolStripMenuItem1");
+            this.saveToolStripMenuItem1.Click += new System.EventHandler(this.saveToolStripMenuItem1_Click);
+            // 
+            // rightClickMenu
+            // 
+            this.rightClickMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toevoegenToolStripMenuItem,
+            this.btnVerwijderen,
+            this.propertiesToolStripMenuItem});
+            this.rightClickMenu.Name = "rightClickMenu";
+            resources.ApplyResources(this.rightClickMenu, "rightClickMenu");
+            // 
+            // toevoegenToolStripMenuItem
+            // 
+            this.toevoegenToolStripMenuItem.Name = "toevoegenToolStripMenuItem";
+            resources.ApplyResources(this.toevoegenToolStripMenuItem, "toevoegenToolStripMenuItem");
+            // 
+            // btnVerwijderen
+            // 
+            this.btnVerwijderen.Name = "btnVerwijderen";
+            resources.ApplyResources(this.btnVerwijderen, "btnVerwijderen");
+            this.btnVerwijderen.Click += new System.EventHandler(this.btnVerwijderen_Click);
+            // 
+            // propertiesToolStripMenuItem
+            // 
+            this.propertiesToolStripMenuItem.Name = "propertiesToolStripMenuItem";
+            resources.ApplyResources(this.propertiesToolStripMenuItem, "propertiesToolStripMenuItem");
+            this.propertiesToolStripMenuItem.Click += new System.EventHandler(this.propertiesToolStripMenuItem_Click);
+            // 
+            // button2
+            // 
+            resources.ApplyResources(this.button2, "button2");
+            this.button2.Name = "button2";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
             // Form2
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.menuStrip1);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.txtFilter_f2);
             this.Controls.Add(this.lbl_list);
@@ -152,10 +227,14 @@
             this.Controls.Add(this.treeView_lib_f2);
             this.Controls.Add(this.lblParent);
             this.Controls.Add(this.lblParentTxt);
+            this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form2";
             this.Load += new System.EventHandler(this.Form2_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
+            this.rightClickMenu.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -177,5 +256,14 @@
         private System.Windows.Forms.Label lbl_list;
         private System.Windows.Forms.TextBox txtFilter_f2;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem libraryToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem1;
+        private System.Windows.Forms.ContextMenuStrip rightClickMenu;
+        private System.Windows.Forms.ToolStripMenuItem btnVerwijderen;
+        private System.Windows.Forms.ToolStripMenuItem propertiesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem toevoegenToolStripMenuItem;
+        private System.Windows.Forms.Button button2;
     }
 }

@@ -14,6 +14,10 @@ namespace TestProject
         {
             this.nNode = n;
         }
+        public MyTreeNode()
+        {
+
+        }
         public void getTreeNodes()
         {
             if (this.nNode.GetClass() == "Device")
@@ -33,6 +37,12 @@ namespace TestProject
                 a.Text = a.nNode.sNode;
                 this.Nodes.Add(a);
             }
+        }
+        public override object Clone()
+        {
+            var obj = (MyTreeNode)base.Clone();
+            obj.nNode = this.nNode;
+            return obj;
         }
     }
 }

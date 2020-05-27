@@ -62,6 +62,7 @@ namespace TestProject
             }
             catch (Exception e)
             {
+                Console.WriteLine(e.Message);
                 return xml;
                 // Returning the original string incase of error.
             }
