@@ -92,7 +92,6 @@ namespace TestProject
         {
             if (e.Button != MouseButtons.Right) return;
             TreeView treeView = sender as TreeView;
-
             ContextMenuStrip contextMenu = rightClickMenu;
             //set the tag of the contextmenu as the current treeview, this is for later use in the button
             contextMenu.Tag = treeView;
