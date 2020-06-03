@@ -14,12 +14,11 @@ namespace TestProject
         [DataMember]
         public string Merk { get; set; }
         [DataMember]
-        public string Soort { get; set; }
+        public string Soort { get; set; }                       //If type controller, check signal count
         [DataMember]
         public string Omschrijving { get; set; }                 //Omschrijving
         [DataMember]
         public string Type { get; set; }                         //STC100, STP100-50, Magna3 etc.
-
         [Browsable(false)]
         public override List<Node> Nodes { get; set; }
 
@@ -30,7 +29,6 @@ namespace TestProject
         public Device(string sNode) : base(sNode)
         {
             this.Signals = new List<Signal>();
-
         }
         public override void AddNode(Node s)
         {

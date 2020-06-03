@@ -38,9 +38,9 @@
             this.radioButton1 = new System.Windows.Forms.RadioButton();
             this.radioButton2 = new System.Windows.Forms.RadioButton();
             this.cboxType = new System.Windows.Forms.CheckedListBox();
-            this.IO = new System.Windows.Forms.CheckBox();
             this.treeView_lib_f2 = new System.Windows.Forms.TreeView();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.button2 = new System.Windows.Forms.Button();
             this.lbl_list = new System.Windows.Forms.Label();
             this.txtFilter_f2 = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
@@ -52,7 +52,6 @@
             this.toevoegenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.btnVerwijderen = new System.Windows.Forms.ToolStripMenuItem();
             this.propertiesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.button2 = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.rightClickMenu.SuspendLayout();
@@ -110,12 +109,6 @@
             resources.ApplyResources(this.cboxType, "cboxType");
             this.cboxType.Name = "cboxType";
             // 
-            // IO
-            // 
-            resources.ApplyResources(this.IO, "IO");
-            this.IO.Name = "IO";
-            this.IO.UseVisualStyleBackColor = true;
-            // 
             // treeView_lib_f2
             // 
             this.treeView_lib_f2.AllowDrop = true;
@@ -127,7 +120,6 @@
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.button2);
-            this.groupBox1.Controls.Add(this.IO);
             this.groupBox1.Controls.Add(this.cboxType);
             this.groupBox1.Controls.Add(this.radioButton2);
             this.groupBox1.Controls.Add(this.radioButton1);
@@ -137,6 +129,13 @@
             resources.ApplyResources(this.groupBox1, "groupBox1");
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.TabStop = false;
+            // 
+            // button2
+            // 
+            resources.ApplyResources(this.button2, "button2");
+            this.button2.Name = "button2";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // lbl_list
             // 
@@ -208,13 +207,6 @@
             resources.ApplyResources(this.propertiesToolStripMenuItem, "propertiesToolStripMenuItem");
             this.propertiesToolStripMenuItem.Click += new System.EventHandler(this.propertiesToolStripMenuItem_Click);
             // 
-            // button2
-            // 
-            resources.ApplyResources(this.button2, "button2");
-            this.button2.Name = "button2";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
-            // 
             // Form2
             // 
             resources.ApplyResources(this, "$this");
@@ -250,7 +242,6 @@
         private System.Windows.Forms.RadioButton radioButton1;
         private System.Windows.Forms.RadioButton radioButton2;
         private System.Windows.Forms.CheckedListBox cboxType;
-        private System.Windows.Forms.CheckBox IO;
         public System.Windows.Forms.TreeView treeView_lib_f2;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label lbl_list;

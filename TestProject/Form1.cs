@@ -44,13 +44,15 @@ namespace TestProject
         {
 
             CreateFromXML("proj.xml", treeView_proj);
-            //CreateFromXML("lib.xml", treeView_lib);
+            // CreateFromXML("lib.xml", treeView_lib);
             // CreateFromXML("proj.xml", treeView_sig);
-            //MyTreeNode libTreeRoot = (MyTreeNode)treeView_lib.Nodes[0];
+            // MyTreeNode libTreeRoot = (MyTreeNode)treeView_lib.Nodes[0];
             // Node libRoot = libTreeRoot.nNode;
             MyTreeNode treeRoot = (MyTreeNode)treeView_proj.Nodes[0];
             Node root = treeRoot.nNode;
             PopulateSigTree(root);
+            
+
         }
         public void PopulateTree(MyTreeNode MyTreeRoot, TreeView treeView)
         {
@@ -126,7 +128,6 @@ namespace TestProject
             Form form2 = new Form2(selectedNode);
             form2.Show();
         }
-
         public void treeView_ItemDrag(object sender, ItemDragEventArgs e)
         {
             // Move the dragged node when the left mouse button is used.
@@ -286,7 +287,6 @@ namespace TestProject
             Node root = treeRoot.nNode;
             DataContractSerializer xs = new DataContractSerializer(typeof(Node), "Node", "Building", new Type[] { typeof(Device), typeof(Signal) });
             FileStream txtWriter = new FileStream(Path, FileMode.Create);
-
             xs.WriteObject(txtWriter, root);
 
             txtWriter.Close();
