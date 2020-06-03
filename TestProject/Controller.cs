@@ -49,7 +49,8 @@ namespace TestProject
             int v_dcC = 0;
             int total = UI + UO + DO + Relais + V_AC + V_DC;
             foreach (Signal s in Signals)
-            {
+            {//I'm not happy with this yet, don't want to implement it yet cuz that's too much work
+                //Not worth my time
                 tcount++;
                 if (tcount > total) chSignals = true;
                 switch (s.type)

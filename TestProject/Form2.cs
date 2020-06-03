@@ -65,6 +65,15 @@ namespace TestProject
             MyTreeNode newNode = new MyTreeNode(selected_Node.nNode);
             newNode.Text = newNode.nNode.sNode;
             newNode = (MyTreeNode)selected_Node.Clone();
+            if ((pNode.nNode.GetClass() == "Device" && newNode.nNode.GetClass() != "Signal") || (pNode.nNode.GetClass() == "Node" && newNode.nNode.GetClass() == "Signal") || (pNode.nNode.GetClass() == "Signal"))
+            {
+                return;
+            }
+            if (newNode.nNode.GetClass() == "Device")
+            {
+                Form f3 = new Form3(newNode);
+                f3.Show();
+            }
             pNode.Nodes.Add(newNode);
             pNode.nNode.AddNode(newNode.nNode);
         }
