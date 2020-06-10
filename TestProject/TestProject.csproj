@@ -71,7 +71,6 @@
       <DependentUpon>Form3.cs</DependentUpon>
     </Compile>
     <Compile Include="HTMLwriter.cs" />
-    <Compile Include="MyCheckedListBoxItem.cs" />
     <Compile Include="MyTreeNode.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -10,6 +11,7 @@ namespace TestProject
     {
         public MyTreeNode pNode; //this is the node on which you clicked
         public MyTreeNode addedNode;
+        List<Signal> l = new List<Signal>();
         public Form2(MyTreeNode p)
         {
             this.pNode = p;
@@ -76,11 +78,11 @@ namespace TestProject
             }
             if (newNode.nNode.GetClass() == "Device")
             {
-                
                 Device d = (Device)newNode.nNode;
                 clBox.Items.Clear();
                 foreach (Signal s in d.Signals)
                 {
+                    l.Add(s);
                     clBox.Items.Add(s.sNode);
                 }
                 
@@ -261,11 +263,19 @@ namespace TestProject
             if(addedNode.nNode.GetClass() == "Device")
             {
                 Device d = (Device)addedNode.nNode;
+                
                 foreach (Object o in clBox.CheckedItems)
                 {
-                    Signal s = new Signal(o.ToString(), "Test");
-                    d.Signals.Add(s);
-                    addedNode.Nodes.Add(s.sNode);
+                    foreach(Signal s1 in l)
+                    {
+                        if(o.ToString() == s1.sNode)
+                        {
+                            d.Signals.Add(s1);
+                            MyTreeNode s1t = new MyTreeNode(s1);
+                            s1t.Text = s1t.nNode.sNode;
+                            addedNode.Nodes.Add(s1t);
+                        }
+                    }   
                 }
                 addedNode.nNode = d;
             }
