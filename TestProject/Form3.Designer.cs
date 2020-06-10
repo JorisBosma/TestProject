@@ -59,7 +59,7 @@
             this.Controls.Add(this.btnOk);
             this.Controls.Add(this.clBox);
             this.Name = "Form3";
-            this.Text = "Form3";
+            this.Text = " ";
             this.Load += new System.EventHandler(this.Form3_Load);
             this.ResumeLayout(false);
 

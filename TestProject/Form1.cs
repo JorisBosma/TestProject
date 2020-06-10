@@ -321,9 +321,9 @@ namespace TestProject
             DataContractSerializer xs2 = new DataContractSerializer(typeof(Node), "Node", "Building", new Type[] { typeof(Device), typeof(Signal) });
             Node root;
             using (Stream reader = new FileStream(File, FileMode.Open))
-                root = (Node)xs2.ReadObject(reader);
+            root = (Node)xs2.ReadObject(reader);
 
-            Console.WriteLine(root.sNode);
+            //Console.WriteLine(root.sNode);
             MyTreeNode myTreeRoot = new MyTreeNode(root);
 
             PopulateTree(myTreeRoot, treeView);

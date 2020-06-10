@@ -9,12 +9,17 @@ namespace TestProject
     public partial class Form2 : Form
     {
         public MyTreeNode pNode; //this is the node on which you clicked
+        public MyTreeNode addedNode;
         public Form2(MyTreeNode p)
         {
             this.pNode = p;
             InitializeComponent();
             this.StartPosition = FormStartPosition.Manual;
             this.Location = new Point(0, 0);
+        }
+        public Form2()
+        {
+            InitializeComponent();
         }
         private void btnAdd_Click(object sender, EventArgs e)
         {
@@ -61,7 +66,7 @@ namespace TestProject
         {
             TreeView treeView = sender as TreeView;
             MyTreeNode selected_Node = (MyTreeNode)treeView.SelectedNode;
-            lbl_list.Text = lbl_list.Text + "\n" + selected_Node.nNode.sNode;
+            lbl_list.Text ="SELECTED: \n" + selected_Node.nNode.sNode;
             MyTreeNode newNode = new MyTreeNode(selected_Node.nNode);
             newNode.Text = newNode.nNode.sNode;
             newNode = (MyTreeNode)selected_Node.Clone();
@@ -71,11 +76,19 @@ namespace TestProject
             }
             if (newNode.nNode.GetClass() == "Device")
             {
-                Form f3 = new Form3(newNode);
-                f3.Show();
+                
+                Device d = (Device)newNode.nNode;
+                clBox.Items.Clear();
+                foreach (Signal s in d.Signals)
+                {
+                    clBox.Items.Add(s.sNode);
+                }
+                
+                d.Signals.Clear();
+                newNode.nNode = d;
+                newNode.Nodes.Clear();
             }
-            pNode.Nodes.Add(newNode);
-            pNode.nNode.AddNode(newNode.nNode);
+            addedNode = newNode;
         }
         private MyTreeNode SearchNode(string SearchText, MyTreeNode StartNode)
         {
@@ -231,7 +244,7 @@ namespace TestProject
             MyTreeNode newTreeNode = new MyTreeNode(newNode);
             newTreeNode.Text = newNode.sNode;
             SelectedNode.nNode.AddNode(newNode);
-            // pNode.nNode.AddNode(newNode);
+            //pNode.nNode.AddNode(newNode);
             if ((SelectedNode.nNode.GetClass() == "Device" && newNode.GetClass() != "Signal") || (SelectedNode.nNode.GetClass() == "Node" && newNode.GetClass() == "Signal") || (SelectedNode.nNode.GetClass() == "Signal"))
             {
                 return;
@@ -242,5 +255,28 @@ namespace TestProject
             }
             SelectedNode.Expand();
         }
+        private void button3_Click(object sender, EventArgs e)
+        {
+            if (addedNode == null) return;
+            if(addedNode.nNode.GetClass() == "Device")
+            {
+                Device d = (Device)addedNode.nNode;
+                foreach (Object o in clBox.CheckedItems)
+                {
+                    Signal s = new Signal(o.ToString(), "Test");
+                    d.Signals.Add(s);
+                    addedNode.Nodes.Add(s.sNode);
+                }
+                addedNode.nNode = d;
+            }
+            addNodes(addedNode);
+            lbl_list.Text = "SELECTED: \n";
+
+        }
+        public void addNodes(MyTreeNode newNode)
+        {
+            pNode.Nodes.Add(newNode);
+            pNode.nNode.AddNode(newNode.nNode);
+        } 
     }
 }
