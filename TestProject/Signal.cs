@@ -29,6 +29,7 @@ namespace TestProject
         [Browsable(false)]
         public override List<Node> Nodes { get; set; }
 
+
         public Signal()
         {
 
@@ -55,6 +56,8 @@ namespace TestProject
         }
         public void Disconnnect()
         {
+            
+            if (this.ConnectedSignal == null) return;
             Signal s = this.ConnectedSignal;
             this.ConnectedSignal = null;
             if(s.ConnectedSignal == this)

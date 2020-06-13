@@ -51,7 +51,7 @@ namespace TestProject
             MyTreeNode treeRoot = (MyTreeNode)treeView_proj.Nodes[0];
             Node root = treeRoot.nNode;
             PopulateSigTree(root);
-            
+            loadColors(treeRoot);
 
         }
         public void PopulateTree(MyTreeNode MyTreeRoot, TreeView treeView)
@@ -195,6 +195,7 @@ namespace TestProject
                             //refresh tree
                             MyTreeNode treeRoot = (MyTreeNode)treeView_proj.Nodes[0];
                             Node root = treeRoot.nNode;
+                            loadColors(treeRoot);
                             treeView_sig.Nodes.Clear();
                             PopulateSigTree(root);
                             //sTarget.Disconnnect(sDragged);
@@ -355,7 +356,33 @@ namespace TestProject
             MyTreeNode treeRoot = (MyTreeNode)treeView_proj.Nodes[0];
             Node root = treeRoot.nNode;
             treeView_sig.Nodes.Clear();
+            loadColors(treeRoot);
             PopulateSigTree(root);
+        }
+        private void loadColors(MyTreeNode myRoot)
+        {
+            int i = 0;
+            foreach (MyTreeNode n in myRoot.Nodes)
+            {
+                loadColors(n);
+                if(n.nNode.GetClass() == "Device")
+                {
+                    Device d = (Device)n.nNode;
+                    foreach(MyTreeNode s in n.Nodes)
+                    {
+                        Signal sig = (Signal)s.nNode;
+                        if (sig.ConnectedSignal != null)
+                        {
+                            s.ForeColor = System.Drawing.Color.Blue;
+                        }
+                        else if (sig.ConnectedSignal == null)
+                        {
+                            s.ForeColor = System.Drawing.Color.Black;
+                        }
+                    }
+                }
+                i++;
+            }
         }
     }
 }
