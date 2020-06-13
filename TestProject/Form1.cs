@@ -326,8 +326,9 @@ namespace TestProject
 
             //Console.WriteLine(root.sNode);
             MyTreeNode myTreeRoot = new MyTreeNode(root);
-
+            
             PopulateTree(myTreeRoot, treeView);
+            loadColors(myTreeRoot);
         }
         private void propertiesToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -359,6 +360,9 @@ namespace TestProject
             loadColors(treeRoot);
             PopulateSigTree(root);
         }
+
+        //This makes sure everything has the correct coloring, makes for better overview for signals
+        //Also used for text changes (Only connected signal for now)
         private void loadColors(MyTreeNode myRoot)
         {
             int i = 0;
@@ -374,10 +378,13 @@ namespace TestProject
                         if (sig.ConnectedSignal != null)
                         {
                             s.ForeColor = System.Drawing.Color.Blue;
+                            s.Text = sig.sNode;
+                            s.Text = s.Text + " :: " + d.sNode + "." +sig.ConnectedSignal.sNode;
                         }
                         else if (sig.ConnectedSignal == null)
                         {
                             s.ForeColor = System.Drawing.Color.Black;
+                            s.Text = sig.sNode;
                         }
                     }
                 }
