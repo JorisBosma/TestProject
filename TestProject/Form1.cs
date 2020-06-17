@@ -39,10 +39,10 @@ namespace TestProject
 
 
         }
-        //-------------   ---MAIN-----------------------------------------------------------------------------------------------------------------------------------------------
+        //----------------MAIN-----------------------------------------------------------------------------------------------------------------------------------------------
         private void Form1_Load(object sender, EventArgs e)
         {
-
+            
             CreateFromXML("proj.xml", treeView_proj);
             // CreateFromXML("lib.xml", treeView_lib);
             // CreateFromXML("proj.xml", treeView_sig);
@@ -342,6 +342,7 @@ namespace TestProject
             //Open new form and give the (new) parent node 
             Form propForm = new PropertyForm(selectedNode);
             propForm.Show();
+            
         }
         private void disconnectSignalsToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -390,6 +391,31 @@ namespace TestProject
                 }
                 i++;
             }
+        }
+
+        private void refreshProjectToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string Path = "temp.xml";
+            //WRITE DATA TO TEMP FILE
+            MyTreeNode treeRoot = (MyTreeNode)treeView_proj.Nodes[0];
+            Node root = treeRoot.nNode;
+            DataContractSerializer xs = new DataContractSerializer(typeof(Node), "Node", "Building", new Type[] { typeof(Device), typeof(Signal) });
+            FileStream txtWriter = new FileStream(Path, FileMode.Create);
+            xs.WriteObject(txtWriter, root);
+
+            txtWriter.Close();
+
+            //READ THAT DATA FROM TEMP
+            DataContractSerializer xs2 = new DataContractSerializer(typeof(Node), "Node", "Building", new Type[] { typeof(Device), typeof(Signal) });
+            
+            using (Stream reader = new FileStream(Path, FileMode.Open))
+                root = (Node)xs2.ReadObject(reader);
+
+            //Console.WriteLine(root.sNode);
+            MyTreeNode myTreeRoot = new MyTreeNode(root);
+
+            PopulateTree(myTreeRoot, treeView_proj);
+            loadColors(myTreeRoot);
         }
     }
 }

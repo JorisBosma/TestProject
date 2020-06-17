@@ -44,6 +44,7 @@
             this.treeView_sig = new System.Windows.Forms.TreeView();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
+            this.refreshProjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.rightClickMenu.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -109,7 +110,8 @@
             // 
             this.openProjectToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.saveProjectToolStripMenuItem,
-            this.openProjectToolStripMenuItem1});
+            this.openProjectToolStripMenuItem1,
+            this.refreshProjectToolStripMenuItem});
             this.openProjectToolStripMenuItem.Name = "openProjectToolStripMenuItem";
             this.openProjectToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.openProjectToolStripMenuItem.Text = "File";
@@ -117,14 +119,14 @@
             // saveProjectToolStripMenuItem
             // 
             this.saveProjectToolStripMenuItem.Name = "saveProjectToolStripMenuItem";
-            this.saveProjectToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
+            this.saveProjectToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.saveProjectToolStripMenuItem.Text = "Save Project";
             this.saveProjectToolStripMenuItem.Click += new System.EventHandler(this.saveProjectToolStripMenuItem_Click);
             // 
             // openProjectToolStripMenuItem1
             // 
             this.openProjectToolStripMenuItem1.Name = "openProjectToolStripMenuItem1";
-            this.openProjectToolStripMenuItem1.Size = new System.Drawing.Size(143, 22);
+            this.openProjectToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
             this.openProjectToolStripMenuItem1.Text = "Open Project";
             this.openProjectToolStripMenuItem1.Click += new System.EventHandler(this.openProjectToolStripMenuItem1_Click);
             // 
@@ -156,6 +158,13 @@
             this.label2.Size = new System.Drawing.Size(53, 13);
             this.label2.TabIndex = 14;
             this.label2.Text = "SIGNALS";
+            // 
+            // refreshProjectToolStripMenuItem
+            // 
+            this.refreshProjectToolStripMenuItem.Name = "refreshProjectToolStripMenuItem";
+            this.refreshProjectToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.refreshProjectToolStripMenuItem.Text = "Refresh Project";
+            this.refreshProjectToolStripMenuItem.Click += new System.EventHandler(this.refreshProjectToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -195,6 +204,7 @@
         public System.Windows.Forms.TreeView treeView_sig;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.ToolStripMenuItem refreshProjectToolStripMenuItem;
     }
 }
 
