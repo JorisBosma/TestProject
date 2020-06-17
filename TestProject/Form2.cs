@@ -11,6 +11,7 @@ namespace TestProject
     {
         public MyTreeNode pNode; //this is the node on which you clicked
         public MyTreeNode addedNode;
+        
         List<Signal> l = new List<Signal>();
         public Form2(MyTreeNode p)
         {
@@ -18,6 +19,7 @@ namespace TestProject
             InitializeComponent();
             this.StartPosition = FormStartPosition.Manual;
             this.Location = new Point(0, 0);
+            treeView_lib_f2.ItemDrag += new ItemDragEventHandler(treeView_lib_f2_ItemDrag);
         }
         public Form2()
         {
@@ -94,8 +96,19 @@ namespace TestProject
         }
         private MyTreeNode SearchNode(string SearchText, MyTreeNode StartNode)
         {
-            MyTreeNode treeNode = null;
-            while (StartNode != null)
+            MyTreeNode treeNode = new MyTreeNode(StartNode.nNode);
+            treeNode.Text = treeNode.nNode.sNode;
+            if (StartNode == null) return treeNode;
+            foreach(MyTreeNode n in StartNode.Nodes)
+            {
+                SearchNode(SearchText, n);
+                if (n.Text.ToLower().Contains(SearchText.ToLower()))
+                {
+                    MyTreeNode cl = (MyTreeNode)n.Clone();
+                    treeNode.Nodes.Add(cl);
+                }
+            }
+           /* while (StartNode != null)
             {
                 if (StartNode.nNode.containsNode(SearchText))
                 {
@@ -108,12 +121,14 @@ namespace TestProject
                     if (treeNode != null) break;
                 }
                 StartNode = (MyTreeNode)StartNode.NextNode;
-            }
+            }*/
             return treeNode;
         }
         private void button1_Click(object sender, EventArgs e)
         {
             //ZOEKEN
+            Form1 f1 = new Form1();
+            f1.CreateFromXML("lib.xml", treeView_lib_f2);
             string search = txtFilter_f2.Text;
             if (search.Count() < 3) return;
             MyTreeNode startNode = (MyTreeNode)treeView_lib_f2.Nodes[0];
@@ -121,8 +136,10 @@ namespace TestProject
             MyTreeNode SelectedNode = SearchNode(search, startNode);
             if (SelectedNode != null)
             {
-                treeView_lib_f2.SelectedNode = SelectedNode;
-                this.treeView_lib_f2.Select();
+                treeView_lib_f2.Nodes.Clear();
+                treeView_lib_f2.Nodes.Add(SelectedNode);
+                //treeView_lib_f2.SelectedNode = SelectedNode;
+                //this.treeView_lib_f2.Select();
             }
         }
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
@@ -286,6 +303,86 @@ namespace TestProject
         {
             pNode.Nodes.Add(newNode);
             pNode.nNode.AddNode(newNode.nNode);
-        } 
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            Form1 f1 = new Form1();
+            f1.CreateFromXML("lib.xml", treeView_lib_f2);
+        }
+
+        private void treeView_lib_f2_DragDrop(object sender, DragEventArgs e)
+        {
+            TreeView treeView = sender as TreeView;
+
+            // Retrieve the client coordinates of the drop location.
+            Point targetPoint = treeView.PointToClient(new Point(e.X, e.Y));
+
+            // Retrieve the node at the drop location.
+            MyTreeNode targetNode = (MyTreeNode)treeView.GetNodeAt(targetPoint);
+
+            // Retrieve the node that was dragged.
+            MyTreeNode draggedNode = (MyTreeNode)e.Data.GetData(typeof(MyTreeNode));
+
+            // Confirm that the node at the drop location is not 
+            // the dragged node or a descendant of the dragged node.
+            if (targetNode == null) targetNode = (MyTreeNode)treeView.Nodes[0]; //als jij niet op een node sleept, targetNode wordt rootnode
+            if (!draggedNode.Equals(targetNode) && !ContainsNode(draggedNode, targetNode))
+            {
+                // If it is a move operation, remove the node from its current 
+                // location and add it to the node at the drop location.
+                if (e.Effect == DragDropEffects.Move)
+                {
+                    draggedNode.Remove();
+                    targetNode.Nodes.Add(draggedNode);
+                }
+
+                // If it is a copy operation, clone the dragged node 
+                // and add it to the node at the drop location.
+                else if (e.Effect == DragDropEffects.Copy)
+                {
+                    targetNode.Nodes.Add((MyTreeNode)draggedNode.Clone());
+                }
+
+                // Expand the node at the location 
+                // to show the dropped node.
+                targetNode.Expand();
+            }
+        }
+        private bool ContainsNode(TreeNode node1, TreeNode node2)
+        {
+            // Check the parent node of the second node.            
+            if (node2.Parent == null) return false;
+            if (node2.Parent.Equals(node1)) return true;
+            // Also gotta figure out what this does exactly?!?!?!
+            // If the parent node is not null or equal to the first node, 
+            // call the ContainsNode method recursively using the parent of 
+            // the second node.
+            return ContainsNode(node1, node2.Parent);
+        }
+
+        private void treeView_lib_f2_DragEnter(object sender, DragEventArgs e)
+        {
+            e.Effect = e.AllowedEffect;
+        }
+
+        private void treeView_lib_f2_DragOver(object sender, DragEventArgs e)
+        {
+            TreeView treeView = sender as TreeView;
+
+            // Retrieve the client coordinates of the mouse position.
+            Point targetPoint = treeView.PointToClient(new Point(e.X, e.Y));
+
+            // Select the node at the mouse position.
+            treeView.SelectedNode = treeView.GetNodeAt(targetPoint);
+        }
+        private void treeView_lib_f2_ItemDrag(object sender, ItemDragEventArgs e)
+        {
+            // Move the dragged node when the left mouse button is used.
+            if (e.Button == MouseButtons.Left)
+            {
+                DoDragDrop(e.Item, DragDropEffects.Move);
+            }
+        }
     }
 }

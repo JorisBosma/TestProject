@@ -40,6 +40,7 @@
             this.cboxType = new System.Windows.Forms.CheckedListBox();
             this.treeView_lib_f2 = new System.Windows.Forms.TreeView();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.radioButton3 = new System.Windows.Forms.RadioButton();
             this.button2 = new System.Windows.Forms.Button();
             this.lbl_list = new System.Windows.Forms.Label();
             this.txtFilter_f2 = new System.Windows.Forms.TextBox();
@@ -55,7 +56,7 @@
             this.clBox = new System.Windows.Forms.CheckedListBox();
             this.label1 = new System.Windows.Forms.Label();
             this.button3 = new System.Windows.Forms.Button();
-            this.radioButton3 = new System.Windows.Forms.RadioButton();
+            this.button4 = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.rightClickMenu.SuspendLayout();
@@ -105,6 +106,7 @@
             // 
             // cboxType
             // 
+            this.cboxType.CheckOnClick = true;
             this.cboxType.FormattingEnabled = true;
             this.cboxType.Items.AddRange(new object[] {
             resources.GetString("cboxType.Items"),
@@ -118,6 +120,9 @@
             this.treeView_lib_f2.AllowDrop = true;
             resources.ApplyResources(this.treeView_lib_f2, "treeView_lib_f2");
             this.treeView_lib_f2.Name = "treeView_lib_f2";
+            this.treeView_lib_f2.DragDrop += new System.Windows.Forms.DragEventHandler(this.treeView_lib_f2_DragDrop);
+            this.treeView_lib_f2.DragEnter += new System.Windows.Forms.DragEventHandler(this.treeView_lib_f2_DragEnter);
+            this.treeView_lib_f2.DragOver += new System.Windows.Forms.DragEventHandler(this.treeView_lib_f2_DragOver);
             this.treeView_lib_f2.DoubleClick += new System.EventHandler(this.treeView_lib_f2_DoubleClick);
             this.treeView_lib_f2.MouseClick += new System.Windows.Forms.MouseEventHandler(this.treeView_lib_f2_MouseClick);
             // 
@@ -134,6 +139,13 @@
             resources.ApplyResources(this.groupBox1, "groupBox1");
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.TabStop = false;
+            // 
+            // radioButton3
+            // 
+            resources.ApplyResources(this.radioButton3, "radioButton3");
+            this.radioButton3.Name = "radioButton3";
+            this.radioButton3.TabStop = true;
+            this.radioButton3.UseVisualStyleBackColor = true;
             // 
             // button2
             // 
@@ -231,17 +243,18 @@
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
-            // radioButton3
+            // button4
             // 
-            resources.ApplyResources(this.radioButton3, "radioButton3");
-            this.radioButton3.Name = "radioButton3";
-            this.radioButton3.TabStop = true;
-            this.radioButton3.UseVisualStyleBackColor = true;
+            resources.ApplyResources(this.button4, "button4");
+            this.button4.Name = "button4";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
             // Form2
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.button4);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.clBox);
@@ -294,5 +307,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.RadioButton radioButton3;
+        private System.Windows.Forms.Button button4;
     }
 }
