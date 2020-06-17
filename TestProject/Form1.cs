@@ -394,7 +394,7 @@ namespace TestProject
             }
         }
 
-        private void refreshProjectToolStripMenuItem_Click(object sender, EventArgs e)
+        private void refreshToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string Path = "temp.xml";
             //WRITE DATA TO TEMP FILE
@@ -408,7 +408,7 @@ namespace TestProject
 
             //READ THAT DATA FROM TEMP
             DataContractSerializer xs2 = new DataContractSerializer(typeof(Node), "Node", "Building", new Type[] { typeof(Device), typeof(Signal) });
-            
+
             using (Stream reader = new FileStream(Path, FileMode.Open))
                 root = (Node)xs2.ReadObject(reader);
 
