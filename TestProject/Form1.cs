@@ -171,7 +171,7 @@ namespace TestProject
                 // location and add it to the node at the drop location.
                 if (e.Effect == DragDropEffects.Move)
                 {
-                    if (/*draggedNode.TreeView == treeView_lib && */targetNode.TreeView == treeView_proj && draggedNode.nNode.GetClass() != "Signal" && targetNode.nNode.GetClass() != "Signal")
+                    if (/*draggedNode.TreeView == treeView_lib && */targetNode.TreeView == treeView_proj && draggedNode.nNode.GetClass() != "Signal" && targetNode.nNode.GetClass() != "Signal" && targetNode.nNode.GetClass() != "Device")
                     {
                         MyTreeNode cNode = new MyTreeNode(draggedNode.nNode);
                         cNode.Text = draggedNode.nNode.sNode;
@@ -353,6 +353,7 @@ namespace TestProject
             //then put the parent's tag into treeview
             TreeView treeView = (TreeView)pbutton.Tag;
             MyTreeNode selectedNode = (MyTreeNode)treeView.SelectedNode;
+            if (selectedNode.nNode.GetClass() != "Signal") return;
             Signal SelectedSig = (Signal)selectedNode.nNode;
             SelectedSig.Disconnnect();
             MyTreeNode treeRoot = (MyTreeNode)treeView_proj.Nodes[0];
@@ -416,6 +417,7 @@ namespace TestProject
 
             PopulateTree(myTreeRoot, treeView_proj);
             loadColors(myTreeRoot);
+            treeView_proj.Nodes[0].Expand();
         }
     }
 }

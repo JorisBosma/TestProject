@@ -122,7 +122,6 @@ namespace TestProject
             if (SelectedNode != null)
             {
                 treeView_lib_f2.SelectedNode = SelectedNode;
-                
                 this.treeView_lib_f2.Select();
             }
         }
