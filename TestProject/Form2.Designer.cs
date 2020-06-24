@@ -50,7 +50,6 @@
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.rightClickMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.toevoegenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.btnVerwijderen = new System.Windows.Forms.ToolStripMenuItem();
             this.propertiesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clBox = new System.Windows.Forms.CheckedListBox();
@@ -58,6 +57,7 @@
             this.button3 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
             this.refreshToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.button5 = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.rightClickMenu.SuspendLayout();
@@ -203,16 +203,10 @@
             // rightClickMenu
             // 
             this.rightClickMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toevoegenToolStripMenuItem,
             this.btnVerwijderen,
             this.propertiesToolStripMenuItem});
             this.rightClickMenu.Name = "rightClickMenu";
             resources.ApplyResources(this.rightClickMenu, "rightClickMenu");
-            // 
-            // toevoegenToolStripMenuItem
-            // 
-            this.toevoegenToolStripMenuItem.Name = "toevoegenToolStripMenuItem";
-            resources.ApplyResources(this.toevoegenToolStripMenuItem, "toevoegenToolStripMenuItem");
             // 
             // btnVerwijderen
             // 
@@ -258,10 +252,18 @@
             resources.ApplyResources(this.refreshToolStripMenuItem, "refreshToolStripMenuItem");
             this.refreshToolStripMenuItem.Click += new System.EventHandler(this.refreshToolStripMenuItem_Click);
             // 
+            // button5
+            // 
+            resources.ApplyResources(this.button5, "button5");
+            this.button5.Name = "button5";
+            this.button5.UseVisualStyleBackColor = true;
+            this.button5.Click += new System.EventHandler(this.button5_Click);
+            // 
             // Form2
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.button5);
             this.Controls.Add(this.button4);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.label1);
@@ -309,7 +311,6 @@
         private System.Windows.Forms.ContextMenuStrip rightClickMenu;
         private System.Windows.Forms.ToolStripMenuItem btnVerwijderen;
         private System.Windows.Forms.ToolStripMenuItem propertiesToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem toevoegenToolStripMenuItem;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.CheckedListBox clBox;
         private System.Windows.Forms.Label label1;
@@ -317,5 +318,6 @@
         private System.Windows.Forms.RadioButton radioButton3;
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.ToolStripMenuItem refreshToolStripMenuItem;
+        private System.Windows.Forms.Button button5;
     }
 }

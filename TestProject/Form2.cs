@@ -13,6 +13,7 @@ namespace TestProject
         public MyTreeNode addedNode;
         
         List<Signal> l = new List<Signal>();
+        List<MyTreeNode> Ln = new List<MyTreeNode>();
         public Form2(MyTreeNode p)
         {
             this.pNode = p;
@@ -27,10 +28,11 @@ namespace TestProject
         }
         private void btnAdd_Click(object sender, EventArgs e)
         {
-            //Adds from the "new" section to the project
+            //This will create a completely new node and add it to the project
             string Name = txtName.Text;
             Node newNode = new Node(Name);
-            if (Name == null) return;
+           
+            if (Name == "") return;
             if (radioButton1.Checked == true)
             {
                 newNode = new Device(Name);
@@ -77,6 +79,7 @@ namespace TestProject
             MyTreeNode newNode = new MyTreeNode(selected_Node.nNode);
             newNode.Text = newNode.nNode.sNode;
             newNode = (MyTreeNode)selected_Node.Clone();
+            
             if ((pNode.nNode.GetClass() == "Device" && newNode.nNode.GetClass() != "Signal") || (pNode.nNode.GetClass() == "Node" && newNode.nNode.GetClass() == "Signal") || (pNode.nNode.GetClass() == "Signal"))
             {
                 return;
@@ -96,6 +99,7 @@ namespace TestProject
                 newNode.Nodes.Clear();
             }
             addedNode = newNode;
+            Ln.Add(newNode);
         }
         private MyTreeNode SearchNode(string SearchText, MyTreeNode StartNode)
         {
@@ -121,7 +125,6 @@ namespace TestProject
             string search = txtFilter_f2.Text;
             if (search.Count() < 3) return;
             MyTreeNode startNode = (MyTreeNode)treeView_lib_f2.Nodes[0];
-
             MyTreeNode SelectedNode = SearchNode(search, startNode);
             if (SelectedNode != null)
             {
@@ -266,6 +269,7 @@ namespace TestProject
         {
             //This button adds the selected Node(, device or signal) to the project 
             //In the future I want to make this a list instead of just 1 node
+            
             if (addedNode == null) return;
             if(addedNode.nNode.GetClass() == "Device")
             {
@@ -281,6 +285,7 @@ namespace TestProject
                             MyTreeNode s1t = new MyTreeNode(s1);
                             s1t.Text = s1t.nNode.sNode;
                             addedNode.Nodes.Add(s1t);
+                           
                         }
                     }   
                 }
@@ -288,16 +293,19 @@ namespace TestProject
             }
             addNodes(addedNode);
             lbl_list.Text = "SELECTED: \n";
+            
 
         }
         public void addNodes(MyTreeNode newNode)
         {
+            //As is says, it just adds new nodes 
             pNode.Nodes.Add(newNode);
             pNode.nNode.AddNode(newNode.nNode);
         }
 
         private void button4_Click(object sender, EventArgs e)
         {
+            //REFRESH
             Form1 f1 = new Form1();
             f1.CreateFromXML("lib.xml", treeView_lib_f2);
         }
@@ -398,6 +406,16 @@ namespace TestProject
 
             Form1 f1 = new Form1();
             f1.CreateFromXML("temp.xml", treeView_lib_f2);
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            //ADD THE LIST TO THE PROJECT // THIS MIGHT GET MOVED TO ANOTHER FUNCITON
+            foreach(MyTreeNode n in Ln)
+            {
+                addedNode = n;
+                button3_Click(sender, e);
+            }
         }
     }
 }
