@@ -21,8 +21,6 @@ namespace TestProject
     public class Signal : Node
     {
         [DataMember]
-        public bool IO { get; set; }
-        [DataMember]
         public string type { get; set; }
         [DataMember]
         public Signal ConnectedSignal { get; set; }
@@ -44,7 +42,7 @@ namespace TestProject
         }
         public void Connect(Signal s)
         {
-            if (this == s) return;
+            if (this.ConnectedSignal != null) return;
             this.ConnectedSignal = s;
             
             //Connect the signal and then make sure the one it's connected to also connects to this one
@@ -56,7 +54,6 @@ namespace TestProject
         }
         public void Disconnnect()
         {
-            
             if (this.ConnectedSignal == null) return;
             Signal s = this.ConnectedSignal;
             this.ConnectedSignal = null;

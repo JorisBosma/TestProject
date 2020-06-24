@@ -27,6 +27,7 @@ namespace TestProject
         }
         private void btnAdd_Click(object sender, EventArgs e)
         {
+            //Adds from the "new" section to the project
             string Name = txtName.Text;
             Node newNode = new Node(Name);
             if (Name == null) return;
@@ -68,6 +69,8 @@ namespace TestProject
         }
         private void treeView_lib_f2_DoubleClick(object sender, EventArgs e)
         {
+            //Sets node as selected node, after this you can also select signals from a device
+            //In the future, want to add it to a list instead of just 1 node at a time
             TreeView treeView = sender as TreeView;
             MyTreeNode selected_Node = (MyTreeNode)treeView.SelectedNode;
             lbl_list.Text ="SELECTED: \n" + selected_Node.nNode.sNode;
@@ -108,20 +111,6 @@ namespace TestProject
                     treeNode.Nodes.Add(cl);
                 }
             }
-           /* while (StartNode != null)
-            {
-                if (StartNode.nNode.containsNode(SearchText))
-                {
-                    treeNode = StartNode;
-                    break;
-                };
-                if (StartNode.Nodes.Count != 0)
-                {
-                    treeNode = SearchNode(SearchText, (MyTreeNode)StartNode.Nodes[0]);//Recursive Search
-                    if (treeNode != null) break;
-                }
-                StartNode = (MyTreeNode)StartNode.NextNode;
-            }*/
             return treeNode;
         }
         private void button1_Click(object sender, EventArgs e)
@@ -138,8 +127,7 @@ namespace TestProject
             {
                 treeView_lib_f2.Nodes.Clear();
                 treeView_lib_f2.Nodes.Add(SelectedNode);
-                //treeView_lib_f2.SelectedNode = SelectedNode;
-                //this.treeView_lib_f2.Select();
+                treeView_lib_f2.Nodes[0].Expand();
             }
         }
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
@@ -225,6 +213,7 @@ namespace TestProject
             TreeView treeView = (TreeView)pbutton.Tag;
             MyTreeNode selectedNode = (MyTreeNode)treeView.SelectedNode;
             MyTreeNode pNode = (MyTreeNode)selectedNode.Parent;
+            
             pNode.nNode.RemoveNode(selectedNode.nNode);
             selectedNode.Remove();
         }
@@ -275,6 +264,8 @@ namespace TestProject
         }
         private void button3_Click(object sender, EventArgs e)
         {
+            //This button adds the selected Node(, device or signal) to the project 
+            //In the future I want to make this a list instead of just 1 node
             if (addedNode == null) return;
             if(addedNode.nNode.GetClass() == "Device")
             {
@@ -354,7 +345,6 @@ namespace TestProject
             // Check the parent node of the second node.            
             if (node2.Parent == null) return false;
             if (node2.Parent.Equals(node1)) return true;
-            // Also gotta figure out what this does exactly?!?!?!
             // If the parent node is not null or equal to the first node, 
             // call the ContainsNode method recursively using the parent of 
             // the second node.
@@ -383,6 +373,31 @@ namespace TestProject
             {
                 DoDragDrop(e.Item, DragDropEffects.Move);
             }
+        }
+
+        private void refreshToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string Path = "temp.xml";
+            //WRITE DATA TO TEMP FILE
+            MyTreeNode treeRoot = (MyTreeNode)treeView_lib_f2.Nodes[0];
+            Node root = treeRoot.nNode;
+            DataContractSerializer xs = new DataContractSerializer(typeof(Node), "Node", "Building", new Type[] { typeof(Device), typeof(Signal) });
+            FileStream txtWriter = new FileStream(Path, FileMode.Create);
+            xs.WriteObject(txtWriter, root);
+
+            txtWriter.Close();
+
+            //READ THAT DATA FROM TEMP
+            DataContractSerializer xs2 = new DataContractSerializer(typeof(Node), "Node", "Building", new Type[] { typeof(Device), typeof(Signal) });
+
+            using (Stream reader = new FileStream(Path, FileMode.Open))
+                root = (Node)xs2.ReadObject(reader);
+
+            //Console.WriteLine(root.sNode);
+            MyTreeNode myTreeRoot = new MyTreeNode(root);
+
+            Form1 f1 = new Form1();
+            f1.CreateFromXML("temp.xml", treeView_lib_f2);
         }
     }
 }

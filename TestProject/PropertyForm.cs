@@ -24,7 +24,7 @@ namespace TestProject
         private void btn_OK_Click(object sender, EventArgs e)
         {
             
-            //RELOAD PROJ TREEVIEW
+            //RELOAD PROJ TREEVIEW <-- Doesn't work anymore ()
            /* Form1 f1 = new Form1();
             f1.Show();
             MyTreeNode Treeroot = (MyTreeNode)f1.treeView_proj.Nodes[0];

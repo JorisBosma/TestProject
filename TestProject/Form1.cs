@@ -41,8 +41,7 @@ namespace TestProject
         }
         //----------------MAIN-----------------------------------------------------------------------------------------------------------------------------------------------
         private void Form1_Load(object sender, EventArgs e)
-        {
-            
+        { 
             CreateFromXML("proj.xml", treeView_proj);
             // CreateFromXML("lib.xml", treeView_lib);
             // CreateFromXML("proj.xml", treeView_sig);
@@ -52,7 +51,6 @@ namespace TestProject
             Node root = treeRoot.nNode;
             PopulateSigTree(root);
             loadColors(treeRoot);
-
         }
         public void PopulateTree(MyTreeNode MyTreeRoot, TreeView treeView)
         {
@@ -111,6 +109,7 @@ namespace TestProject
             TreeView treeView = (TreeView)pbutton.Tag;
             MyTreeNode selectedNode = (MyTreeNode)treeView.SelectedNode;
             MyTreeNode pNode = (MyTreeNode)selectedNode.Parent;
+            if (selectedNode == treeView.Nodes[0]) return;
             pNode.nNode.RemoveNode(selectedNode.nNode);
             selectedNode.Remove();
         }
@@ -170,54 +169,43 @@ namespace TestProject
                 // If it is a move operation, remove the node from its current 
                 // location and add it to the node at the drop location.
                 if (e.Effect == DragDropEffects.Move)
-                {
-                    if (/*draggedNode.TreeView == treeView_lib && */targetNode.TreeView == treeView_proj && draggedNode.nNode.GetClass() != "Signal" && targetNode.nNode.GetClass() != "Signal" && targetNode.nNode.GetClass() != "Device")
+                { 
+                    if (targetNode.nNode.GetClass() == "Signal" && draggedNode.nNode.GetClass() == "Signal")
                     {
-                        MyTreeNode cNode = new MyTreeNode(draggedNode.nNode);
-                        cNode.Text = draggedNode.nNode.sNode;
-                        cNode.getTreeNodes();
-                        targetNode.nNode.AddNode(cNode.nNode);
-                        targetNode.Nodes.Add(cNode);
+                        Signal sTarget = (Signal)targetNode.nNode;
+                        Signal sDragged = (Signal)draggedNode.nNode;
+                        sTarget.Connect(sDragged);
+
+                        MyTreeNode t = (MyTreeNode)targetNode.Parent;
+                        Device parentD = (Device)t.nNode;
+                        //System.Console.WriteLine("Connected: "+sTarget.ConnectedSignal.sNode + sDragged.ConnectedSignal.sNode);
+                        targetNode.ForeColor = System.Drawing.Color.Green;
+                        draggedNode.ForeColor = System.Drawing.Color.Green;
+                        //refresh tree
+                        MyTreeNode treeRoot = (MyTreeNode)treeView_proj.Nodes[0];
+                        Node root = treeRoot.nNode;
+                        loadColors(treeRoot);
+                        treeView_sig.Nodes.Clear();
+                        PopulateSigTree(root);
+                        //sTarget.Disconnnect(sDragged);
+                        //System.Console.WriteLine("Connected: " + sTarget.ConnectedSignal.sNode + sDragged.ConnectedSignal.sNode);
+                    }
+                    if ((targetNode.nNode.GetClass() == "Device" && draggedNode.nNode.GetClass() != "Signal") || (targetNode.nNode.GetClass() == "Node" && draggedNode.nNode.GetClass() == "Signal") || (targetNode.nNode.GetClass() == "Signal"))
+                    {
+                        return;
                     }
                     else
                     {
-                        if (targetNode.nNode.GetClass() == "Signal" && draggedNode.nNode.GetClass() == "Signal")
-                        {
-                            Signal sTarget = (Signal)targetNode.nNode;
-                            Signal sDragged = (Signal)draggedNode.nNode;
-                            sTarget.Connect(sDragged);
-
-                            MyTreeNode t = (MyTreeNode)targetNode.Parent;
-                            Device parentD = (Device)t.nNode;
-                            //System.Console.WriteLine("Connected: "+sTarget.ConnectedSignal.sNode + sDragged.ConnectedSignal.sNode);
-                            targetNode.ForeColor = System.Drawing.Color.Green;
-                            draggedNode.ForeColor = System.Drawing.Color.Green;
-                            //refresh tree
-                            MyTreeNode treeRoot = (MyTreeNode)treeView_proj.Nodes[0];
-                            Node root = treeRoot.nNode;
-                            loadColors(treeRoot);
-                            treeView_sig.Nodes.Clear();
-                            PopulateSigTree(root);
-                            //sTarget.Disconnnect(sDragged);
-                            //System.Console.WriteLine("Connected: " + sTarget.ConnectedSignal.sNode + sDragged.ConnectedSignal.sNode);
-                        }
-                        if ((targetNode.nNode.GetClass() == "Device" && draggedNode.nNode.GetClass() != "Signal") || (targetNode.nNode.GetClass() == "Node" && draggedNode.nNode.GetClass() == "Signal") || (targetNode.nNode.GetClass() == "Signal"))
-                        {
-                            return;
-                        }
-                        else
-                        {
-                            //Remove and Add node in Data
-                            MyTreeNode parentNode = (MyTreeNode)draggedNode.Parent;
-                            // MyTreeNode cloneNode = (MyTreeNode)draggedNode.Clone();
-                            if (parentNode == null) return;
-                            parentNode.nNode.RemoveNode(draggedNode.nNode);
-                            targetNode.nNode.AddNode(draggedNode.nNode);
-                            //Remove and Add node in the tree
-                            //Always do this after manipulating the data, otherwise the parentNode is not accurate
-                            draggedNode.Remove();
-                            targetNode.Nodes.Add(draggedNode); //Put dragged node on top (bottom is default)
-                        }
+                        //Remove and Add node in Data
+                        MyTreeNode parentNode = (MyTreeNode)draggedNode.Parent;
+                        // MyTreeNode cloneNode = (MyTreeNode)draggedNode.Clone();
+                        if (parentNode == null) return;
+                        parentNode.nNode.RemoveNode(draggedNode.nNode);
+                        targetNode.nNode.AddNode(draggedNode.nNode);
+                        //Remove and Add node in the tree
+                        //Always do this after manipulating the data, otherwise the parentNode is not accurate
+                        draggedNode.Remove();
+                        targetNode.Nodes.Add(draggedNode); //Put dragged node on top (bottom is default)
                     }
                 }
                 // Expand the node at the location
@@ -293,6 +281,7 @@ namespace TestProject
         }
         private void openProjectToolStripMenuItem1_Click(object sender, EventArgs e)
         {
+            //Opens dialog to open files
             string File = "Test.xml";
             OpenFileDialog openFileDialog = new OpenFileDialog
             {
@@ -367,6 +356,7 @@ namespace TestProject
         //Also used for text changes (Only connected signal for now)
         private void loadColors(MyTreeNode myRoot)
         {
+            //Seek out all signals, and check if they are connected,
             int i = 0;
             foreach (MyTreeNode n in myRoot.Nodes)
             {
@@ -376,12 +366,14 @@ namespace TestProject
                     Device d = (Device)n.nNode;
                     foreach(MyTreeNode s in n.Nodes)
                     {
+
                         Signal sig = (Signal)s.nNode;
                         if (sig.ConnectedSignal != null)
                         {
                             s.ForeColor = System.Drawing.Color.Blue;
                             s.Text = sig.sNode;
-                            s.Text = s.Text + " :: " + d.sNode + "." +sig.ConnectedSignal.sNode;
+                            s.Text = s.Text + " :: " + sig.ConnectedSignal.sNode /*+ "." + sig.ConnectedSignal.type*/;
+                            
                         }
                         else if (sig.ConnectedSignal == null)
                         {
